@@ -505,8 +505,8 @@ class MerchantProductImageViewSet(viewsets.ModelViewSet):
         product = self.get_product()
         
         # Check image limit
-        if product.images.count() >= 8:
-            return Response({"detail": "Maximum of 8 images allowed per product."}, status=status.HTTP_400_BAD_REQUEST)
+        if product.images.count() >= 15:
+            return Response({"detail": f"Maximum of 15 images allowed per product (currently has {product.images.count()})."}, status=status.HTTP_400_BAD_REQUEST)
             
         image_file = request.FILES.get('image') or request.FILES.get('file')
         if not image_file:

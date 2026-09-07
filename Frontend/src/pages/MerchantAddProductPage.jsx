@@ -67,10 +67,6 @@ export default function MerchantAddProductPage() {
         }
     }, [isEditMode, slug]);
 
-    // For handling on-the-fly category creation
-    const [newCategoryName, setNewCategoryName] = useState('');
-    const [isCreatingCategory, setIsCreatingCategory] = useState(false);
-
     const [images, setImages] = useState([]);
 
     const handleChange = (e) => {
@@ -95,37 +91,18 @@ export default function MerchantAddProductPage() {
             toast.error("Failed to delete image");
         }
     };
-    
-    const handleCreateCategory = async () => {
-        const trimmed = newCategoryName.trim();
-        if (!trimmed) return;
-        setIsCreatingCategory(true);
-        try {
-            const baseSlug = trimmed.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-            const res = await axiosClient.post('/catalog/categories/', {
-                name: trimmed,
-                slug: baseSlug || undefined,
-                is_active: true
-            });
-            await dispatch(fetchCategories()); // Refresh categories
-            setForm((prev) => ({ ...prev, category: res.data.id }));
-            setNewCategoryName('');
-            toast.success(`Category "${res.data.name || trimmed}" created!`);
-        } catch (error) {
-            const errorMsg = error.response?.data?.name?.[0] || 
-                             error.response?.data?.slug?.[0] || 
-                             error.response?.data?.detail || 
-                             'Failed to create category';
-            toast.error(errorMsg);
-        } finally {
-            setIsCreatingCategory(false);
-        }
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         try {
+            const totalImages = existingImages.length + images.length;
+            if (totalImages > 15) {
+                toast.error(`Maximum of 15 images allowed. You have ${existingImages.length} current images and selected ${images.length} new.`);
+                setIsLoading(false);
+                return;
+            }
+
             // 1. Create Product
             const productPayload = {
                 ...form,
@@ -152,13 +129,14 @@ export default function MerchantAddProductPage() {
                     const formData = new FormData();
                     formData.append('image', images[i]);
                     formData.append('alt_text', `${productPayload.name} - Image ${i + 1}`);
-                    if (i === 0) formData.append('is_primary', 'true');
+                    if (existingImages.length === 0 && i === 0) formData.append('is_primary', 'true');
                     
                     try {
                         await axiosClient.post(`/catalog/merchant/products/${productId}/images/`, formData);
                     } catch (imgError) {
                         console.error('Image upload error:', imgError);
-                        toast.error(`Failed to upload image ${i + 1}`);
+                        const detailMsg = imgError.response?.data?.detail || imgError.response?.data?.image?.[0] || `Failed to upload image ${i + 1}`;
+                        toast.error(detailMsg);
                     }
                 }
             }
@@ -334,40 +312,20 @@ export default function MerchantAddProductPage() {
                             <label htmlFor="category" className="block text-sm font-medium leading-6 text-gray-900">
                                 Category <span className="text-red-500">*</span>
                             </label>
-                            <div className="mt-2 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                            <div className="mt-2">
                                 <select
                                     id="category"
                                     name="category"
                                     required
                                     value={form.category}
                                     onChange={handleChange}
-                                    className="block w-full sm:max-w-xs rounded-xl border border-gray-300 py-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-indigo-600 sm:text-sm px-3 bg-white"
+                                    className="block w-full rounded-xl border border-gray-300 py-2.5 text-gray-900 shadow-xs focus:ring-2 focus:ring-indigo-600 sm:text-sm px-3 bg-white"
                                 >
-                                    <option value="">Select a category</option>
+                                    <option value="">-- Select a Category --</option>
                                     {categories.map((c) => (
                                         <option key={c.id} value={c.id}>{c.name}</option>
                                     ))}
                                 </select>
-                                
-                                <div className="flex flex-1 items-center gap-2">
-                                    <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">or Add New:</span>
-                                    <input 
-                                        type="text"
-                                        placeholder="New category name..."
-                                        value={newCategoryName}
-                                        onChange={(e) => setNewCategoryName(e.target.value)}
-                                        className="block w-full rounded-xl border border-gray-300 py-2 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm px-3"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={handleCreateCategory}
-                                        disabled={isCreatingCategory || !newCategoryName.trim()}
-                                        className="rounded-xl bg-indigo-50 text-indigo-600 px-3.5 py-2 text-sm font-semibold shadow-sm hover:bg-indigo-100 disabled:opacity-50 flex items-center justify-center flex-shrink-0"
-                                        title="Create category"
-                                    >
-                                        {isCreatingCategory ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                                    </button>
-                                </div>
                             </div>
                         </div>
 

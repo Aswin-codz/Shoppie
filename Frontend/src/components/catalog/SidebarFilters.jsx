@@ -94,7 +94,7 @@ export default function SidebarFilters() {
   const hasFilters = searchParams.get('category') || searchParams.get('min_price') || searchParams.get('max_price') || searchParams.get('ordering');
 
   return (
-    <div className="w-full lg:w-64 flex-shrink-0 mb-8 lg:mb-0 lg:pr-8">
+    <div className="w-full">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-slate-900">Filters</h2>
         {hasFilters && (

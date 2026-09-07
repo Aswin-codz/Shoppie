@@ -12,3 +12,6 @@ python manage.py collectstatic --no-input
 
 # Apply database migrations
 python manage.py migrate
+
+# Seed catalog categories
+python seed_categories.py || true

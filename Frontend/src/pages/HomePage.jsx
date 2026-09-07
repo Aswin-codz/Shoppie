@@ -220,7 +220,7 @@ export default function HomePage() {
 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* Sticky Desktop Filters Sidebar */}
-        <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-scroll scrollbar-thin scrollbar-thumb-indigo-500 overflow-x-hidden pr-1">
+        <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200 hover:scrollbar-thumb-slate-300">
           <SidebarFilters />
         </aside>
 

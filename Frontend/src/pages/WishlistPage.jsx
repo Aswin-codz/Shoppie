@@ -80,7 +80,7 @@ export default function WishlistPage() {
             </Link>
           </div>
         ) : (
-          <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {items.map((item) => (
               <ProductCard key={item.product.id} product={item.product} intelligence={item.intelligence} />
             ))}
