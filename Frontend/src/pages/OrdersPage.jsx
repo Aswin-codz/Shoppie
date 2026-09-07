@@ -172,35 +172,35 @@ const OrdersPage = () => {
     }
 
     return (
-        <div className="w-full px-6 sm:px-10 lg:px-14 xl:px-16 py-12">
-            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-8">Order History</h1>
+        <div className="w-full px-3.5 sm:px-8 lg:px-14 xl:px-16 py-6 sm:py-12">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mb-6 sm:mb-8">Order History</h1>
             
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
                 {orders.map((order) => (
-                    <div key={order.id} className="bg-white border-t border-b border-gray-200 shadow-sm sm:rounded-lg sm:border">
-                        <div className="px-4 py-6 sm:px-6 lg:p-8 flex items-center justify-between border-b border-gray-200 bg-gray-50 rounded-t-lg">
-                            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 w-full">
+                    <div key={order.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                        <div className="px-4 py-4 sm:px-6 sm:py-6 lg:p-8 border-b border-gray-200 bg-gray-50/80">
+                            <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 w-full">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-900">Order Number</p>
-                                    <p className="mt-1 text-sm text-gray-500">{order.order_number}</p>
+                                    <p className="text-[11px] sm:text-xs uppercase font-bold text-gray-500">Order Number</p>
+                                    <p className="mt-0.5 text-xs sm:text-sm font-semibold text-gray-900 truncate" title={order.order_number}>{order.order_number}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm font-medium text-gray-900">Date placed</p>
-                                    <p className="mt-1 text-sm text-gray-500">{new Date(order.created_at).toLocaleDateString()}</p>
+                                    <p className="text-[11px] sm:text-xs uppercase font-bold text-gray-500">Date placed</p>
+                                    <p className="mt-0.5 text-xs sm:text-sm font-medium text-gray-700">{new Date(order.created_at).toLocaleDateString()}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm font-medium text-gray-900">Total amount</p>
-                                    <p className="mt-1 text-sm font-medium text-gray-900">₹{order.total_amount}</p>
+                                    <p className="text-[11px] sm:text-xs uppercase font-bold text-gray-500">Total amount</p>
+                                    <p className="mt-0.5 text-xs sm:text-sm font-bold text-gray-900">₹{order.total_amount}</p>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <div>
-                                        <p className="text-sm font-medium text-gray-900">Status</p>
-                                        <p className="mt-1 text-sm font-semibold text-indigo-600">{order.status}</p>
+                                        <p className="text-[11px] sm:text-xs uppercase font-bold text-gray-500">Status</p>
+                                        <p className="mt-0.5 text-xs sm:text-sm font-bold text-indigo-600">{order.status}</p>
                                     </div>
                                     {(order.status === 'PENDING' || order.status === 'PACKAGING') && (
                                         <button 
                                             onClick={() => handleCancelOrder(order.id)}
-                                            className="ml-4 px-3 py-1 bg-white border border-rose-300 text-rose-600 rounded hover:bg-rose-50 text-sm font-medium"
+                                            className="ml-auto px-2.5 py-1 bg-white border border-rose-300 text-rose-600 rounded-lg hover:bg-rose-50 text-xs font-semibold"
                                         >
                                             Cancel
                                         </button>
@@ -212,11 +212,11 @@ const OrdersPage = () => {
                         {/* Order Tracking Timeline */}
                         <OrderTrackingTimeline status={order.status} historyEvents={order.history_events} />
 
-                        <div className="px-4 py-6 sm:px-6 lg:p-8">
+                        <div className="px-4 py-4 sm:px-6 sm:py-6 lg:p-8">
                             <ul className="divide-y divide-gray-200">
                                 {order.items.map((item) => (
-                                    <li key={item.id} className="py-6 flex">
-                                        <div className="flex-shrink-0 w-20 h-20 bg-white border border-gray-200 rounded-lg overflow-hidden sm:w-24 sm:h-24 p-1 flex items-center justify-center">
+                                    <li key={item.id} className="py-4 sm:py-6 flex items-start sm:items-center">
+                                        <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 bg-white border border-gray-200 rounded-xl overflow-hidden p-1 flex items-center justify-center">
                                             {(item.product_image || item.product_image_url) ? (
                                                 <img src={item.product_image || item.product_image_url} alt={item.product_name} className="w-full h-full object-center object-contain" />
                                             ) : (
@@ -224,37 +224,37 @@ const OrdersPage = () => {
                                             )}
                                         </div>
 
-                                        <div className="ml-4 flex-1 flex flex-col justify-between">
+                                        <div className="ml-3 sm:ml-4 flex-1 flex flex-col justify-between">
                                             <div>
-                                                <div className="flex justify-between sm:grid sm:grid-cols-2 sm:gap-x-6">
+                                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                                                     <div>
-                                                        <h4 className="font-medium text-gray-900">
-                                                            <Link to={`/product/${item.product_id}`}>{item.product_name}</Link>
+                                                        <h4 className="font-semibold text-gray-900 text-sm sm:text-base">
+                                                            <Link to={`/product/${item.product_id}`} className="hover:text-indigo-600 transition">{item.product_name}</Link>
                                                         </h4>
-                                                        <p className="mt-1 text-sm text-gray-500">Qty {item.quantity}</p>
+                                                        <p className="mt-0.5 text-xs text-gray-500 font-medium">Qty {item.quantity}</p>
                                                     </div>
-                                                    <p className="text-sm font-medium text-gray-900 text-right sm:text-left mt-1 sm:mt-0">
+                                                    <p className="text-sm font-bold text-gray-900 mt-0.5 sm:mt-0">
                                                         ₹{item.line_total}
                                                     </p>
-                                                    <div className="mt-4 flex gap-4">
-                                                        {order.status === 'DELIVERED' && (
-                                                            <button 
-                                                                onClick={() => {
-                                                                    setReturnForm({ quantity: 1, reason: 'DAMAGED', customer_notes: '' });
-                                                                    setReturnModal({ show: true, orderItem: item, order: order });
-                                                                }}
-                                                                className="text-sm text-indigo-600 hover:text-indigo-900 font-medium flex items-center gap-1"
-                                                            >
-                                                                <ArrowDownLeft className="w-4 h-4" /> Return Item
-                                                            </button>
-                                                        )}
+                                                </div>
+                                                <div className="mt-3 sm:mt-4 flex flex-wrap gap-2.5 sm:gap-4">
+                                                    {order.status === 'DELIVERED' && (
                                                         <button 
-                                                            onClick={() => handleBuyAgain(item)}
-                                                            className="text-sm text-emerald-600 hover:text-emerald-800 font-medium flex items-center gap-1"
+                                                            onClick={() => {
+                                                                setReturnForm({ quantity: 1, reason: 'DAMAGED', customer_notes: '' });
+                                                                setReturnModal({ show: true, orderItem: item, order: order });
+                                                            }}
+                                                            className="text-xs sm:text-sm text-indigo-600 hover:text-indigo-900 font-semibold flex items-center gap-1 bg-indigo-50/60 px-2.5 py-1 rounded-lg"
                                                         >
-                                                            <ShoppingCart className="w-4 h-4" /> Buy Again
+                                                            <ArrowDownLeft className="w-3.5 h-3.5" /> Return Item
                                                         </button>
-                                                    </div>
+                                                    )}
+                                                    <button 
+                                                        onClick={() => handleBuyAgain(item)}
+                                                        className="text-xs sm:text-sm text-emerald-600 hover:text-emerald-800 font-semibold flex items-center gap-1 bg-emerald-50/60 px-2.5 py-1 rounded-lg"
+                                                    >
+                                                        <ShoppingCart className="w-3.5 h-3.5" /> Buy Again
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>

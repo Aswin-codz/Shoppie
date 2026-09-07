@@ -90,16 +90,16 @@ export default function UserProfilePage() {
   const fullName = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.username;
 
   return (
-    <div className="w-full px-6 sm:px-10 lg:px-14 xl:px-16 py-10">
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Account & Profile</h1>
-        <p className="text-slate-500 text-sm mt-1">Manage your personal information, contact details, and shipping addresses</p>
+    <div className="w-full px-3.5 sm:px-8 lg:px-14 xl:px-16 py-6 sm:py-10">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Account & Profile</h1>
+        <p className="text-slate-500 text-xs sm:text-sm mt-1">Manage your personal information, contact details, and shipping addresses</p>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         {/* User Details */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6 md:p-8">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/80 p-5 sm:p-6 md:p-8">
             <div className="flex flex-col items-center text-center pb-6 border-b border-slate-100">
               <div className="w-20 h-20 bg-gradient-to-tr from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-100 mb-4 overflow-hidden">
                 {user?.profile_image_url ? (
@@ -176,19 +176,19 @@ export default function UserProfilePage() {
         </div>
         
         {/* Right Column: Addresses & Preferences */}
-        <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6 md:p-8">
-            <div className="flex justify-between items-center mb-6">
+        <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/80 p-5 sm:p-6 md:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+                <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900">Saved Addresses</h2>
+                  <h2 className="text-lg sm:text-xl font-bold text-slate-900">Saved Addresses</h2>
                   <p className="text-xs text-slate-500">Shipping addresses used during checkout</p>
                 </div>
               </div>
-              <Link to="/address/add" className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-100 transition">
+              <Link to="/address/add" className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-100 transition self-start sm:self-auto">
                 <Plus className="w-4 h-4" />
                 Add Address
               </Link>
@@ -207,14 +207,16 @@ export default function UserProfilePage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {(Array.isArray(addresses) ? addresses : (addresses?.results || [])).map((address) => (
-                  <div key={address.id} className="border border-slate-200/80 rounded-2xl p-5 relative group hover:border-indigo-300 hover:shadow-sm transition bg-slate-50/40">
-                    {address.is_default && (
-                      <span className="absolute top-4 right-4 bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
-                        Default
-                      </span>
-                    )}
-                    <h3 className="font-bold text-slate-900 text-sm">{address.full_name}</h3>
-                    <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                  <div key={address.id} className="border border-slate-200/80 rounded-2xl p-4 sm:p-5 relative group hover:border-indigo-300 hover:shadow-sm transition bg-slate-50/40">
+                    <div className="flex items-start justify-between gap-2 mb-1.5">
+                      <h3 className="font-bold text-slate-900 text-sm">{address.full_name}</h3>
+                      {address.is_default && (
+                        <span className="shrink-0 bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                          Default
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-600 leading-relaxed">
                       {address.address_line_1}{address.address_line_2 && `, ${address.address_line_2}`}
                     </p>
                     <p className="text-xs text-slate-600">{address.city}, {address.state} {address.postal_code}</p>
@@ -227,7 +229,7 @@ export default function UserProfilePage() {
                     
                     <button 
                       onClick={() => handleDeleteAddress(address.id)}
-                      className="mt-4 text-rose-600 hover:text-rose-700 text-xs font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="mt-4 text-rose-600 hover:text-rose-700 text-xs font-semibold flex items-center gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                     >
                       <Trash2 className="w-3.5 h-3.5" /> Delete Address
                     </button>
@@ -238,7 +240,7 @@ export default function UserProfilePage() {
           </div>
 
           {/* Notification Preferences */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6 md:p-8">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/80 p-5 sm:p-6 md:p-8">
             <h2 className="text-xl font-bold text-slate-900 mb-1">Notification Preferences</h2>
             <p className="text-xs text-slate-500 mb-6">Choose what updates you want to receive</p>
             {preferences ? (

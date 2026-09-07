@@ -183,8 +183,8 @@ export default function MerchantAddProductPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-2xl md:col-span-2 p-6 md:p-8">
-                    <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-2xl md:col-span-2 p-4 sm:p-6 md:p-8">
+                    <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:gap-y-8 sm:grid-cols-6">
                         
                         <div className="col-span-full">
                             <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
@@ -272,14 +272,14 @@ export default function MerchantAddProductPage() {
                             <label htmlFor="category" className="block text-sm font-medium leading-6 text-gray-900">
                                 Category <span className="text-red-500">*</span>
                             </label>
-                            <div className="mt-2 flex gap-4">
+                            <div className="mt-2 flex flex-col sm:flex-row gap-3 sm:gap-4">
                                 <select
                                     id="category"
                                     name="category"
                                     required
                                     value={form.category}
                                     onChange={handleChange}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 px-3"
+                                    className="block w-full sm:max-w-xs rounded-xl border border-gray-300 py-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-indigo-600 sm:text-sm px-3 bg-white"
                                 >
                                     <option value="">Select a category</option>
                                     {categories.map((c) => (
@@ -288,19 +288,20 @@ export default function MerchantAddProductPage() {
                                 </select>
                                 
                                 <div className="flex flex-1 items-center gap-2">
-                                    <span className="text-sm text-gray-500">or</span>
+                                    <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">or Add New:</span>
                                     <input 
                                         type="text"
-                                        placeholder="New category..."
+                                        placeholder="New category name..."
                                         value={newCategoryName}
                                         onChange={(e) => setNewCategoryName(e.target.value)}
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
+                                        className="block w-full rounded-xl border border-gray-300 py-2 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm px-3"
                                     />
                                     <button
                                         type="button"
                                         onClick={handleCreateCategory}
                                         disabled={isCreatingCategory || !newCategoryName.trim()}
-                                        className="rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
+                                        className="rounded-xl bg-indigo-50 text-indigo-600 px-3.5 py-2 text-sm font-semibold shadow-sm hover:bg-indigo-100 disabled:opacity-50 flex items-center justify-center flex-shrink-0"
+                                        title="Create category"
                                     >
                                         {isCreatingCategory ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                                     </button>

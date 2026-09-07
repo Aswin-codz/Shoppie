@@ -113,26 +113,26 @@ export default function MerchantProductsPage() {
     };
 
     return (
-        <div className="w-full px-6 sm:px-10 lg:px-14 xl:px-16 py-10">
+        <div className="w-full px-3.5 sm:px-8 lg:px-14 xl:px-16 py-6 sm:py-10">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                        <Package className="h-8 w-8 text-indigo-600" />
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
+                        <Package className="h-7 w-7 sm:h-8 sm:w-8 text-indigo-600" />
                         My Products
                     </h1>
-                    <p className="mt-2 text-sm text-gray-500">Manage your product listings, stock, and pricing.</p>
+                    <p className="mt-1 text-xs sm:text-sm text-gray-500">Manage your product listings, stock, and pricing.</p>
                 </div>
                 <Link
                     to="/merchant/products/new"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition-colors"
                 >
                     <Plus className="h-4 w-4" />
                     Add Product
                 </Link>
             </div>
 
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 flex items-center">
-                <Search className="h-5 w-5 text-gray-400 mr-3" />
+            <div className="bg-white p-3.5 sm:p-4 rounded-xl shadow-sm border border-gray-200 mb-6 flex items-center">
+                <Search className="h-5 w-5 text-gray-400 mr-3 shrink-0" />
                 <input
                     type="text"
                     placeholder="Search your products by name or SKU..."
@@ -155,8 +155,61 @@ export default function MerchantProductsPage() {
                     </p>
                 </div>
             ) : (
-                <div className="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto">
+                <div className="bg-white shadow-sm rounded-2xl border border-gray-200 overflow-hidden">
+                    {/* Mobile Card List (< md) */}
+                    <div className="md:hidden divide-y divide-gray-100">
+                        {products.map((product) => (
+                            <div key={product.id} className="p-4 space-y-3">
+                                <div className="flex items-start gap-3">
+                                    <div className="h-16 w-16 flex-shrink-0 bg-white rounded-xl overflow-hidden border border-gray-200 flex items-center justify-center p-1 shadow-xs">
+                                        {product.primary_image ? (
+                                            <img className="h-full w-full object-contain" src={product.primary_image} alt="" />
+                                        ) : (
+                                            <Package className="h-6 w-6 text-gray-400" />
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="text-sm font-bold text-gray-900 truncate" title={product.name}>
+                                            {product.name}
+                                        </h4>
+                                        <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${product.stock_quantity > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}`}>
+                                                {product.stock_quantity} in stock
+                                            </span>
+                                            <span className="text-[11px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md truncate">
+                                                {product.category}
+                                            </span>
+                                        </div>
+                                        <div className="mt-1.5 flex items-baseline gap-2">
+                                            <span className="text-sm font-black text-gray-900">₹{Number(product.price).toFixed(2)}</span>
+                                            {product.compare_at_price && (
+                                                <span className="text-xs text-gray-400 line-through">₹{Number(product.compare_at_price).toFixed(2)}</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2 pt-2 border-t border-gray-50">
+                                    <Link
+                                        to={`/merchant/products/${product.slug}/edit`}
+                                        className="flex-1 text-center text-indigo-600 bg-indigo-50 hover:bg-indigo-100 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5"
+                                    >
+                                        <Edit2 className="h-3.5 w-3.5" />
+                                        Edit
+                                    </Link>
+                                    <button
+                                        onClick={() => setDeletingProduct(product)}
+                                        className="flex-1 text-center text-rose-600 bg-rose-50 hover:bg-rose-100 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5"
+                                    >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Desktop Table View (>= md) */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>

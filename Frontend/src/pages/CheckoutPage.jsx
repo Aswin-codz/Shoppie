@@ -266,8 +266,8 @@ const CheckoutPage = () => {
     }
 
     return (
-        <div className="w-full px-6 sm:px-10 lg:px-14 xl:px-16 py-12 bg-slate-50/60 min-h-screen">
-            <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-10 tracking-tight">Checkout</h1>
+        <div className="w-full px-3.5 sm:px-8 lg:px-14 xl:px-16 py-6 sm:py-12 bg-slate-50/60 min-h-screen">
+            <h1 className="text-2xl sm:text-4xl font-black text-gray-900 mb-6 sm:mb-10 tracking-tight">Checkout</h1>
             
             {error && (
                 <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-8 rounded-r-lg shadow-sm">
@@ -294,19 +294,11 @@ const CheckoutPage = () => {
                             <div className="mt-8 border-t border-gray-200 pt-6 flex flex-col sm:flex-row gap-3">
                                 <button
                                     onClick={handleProceedToPayment}
-                                    disabled={loading || !selectedAddressId || isConfirmingDemoPayment}
-                                    className="flex-1 bg-indigo-600 border border-transparent rounded-xl shadow-lg shadow-indigo-600/20 py-3.5 px-4 text-base font-bold text-white hover:bg-indigo-700 disabled:opacity-50 transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
+                                    disabled={loading || !selectedAddressId}
+                                    className="w-full bg-indigo-600 border border-transparent rounded-xl shadow-lg shadow-indigo-600/20 py-3.5 px-4 text-base font-bold text-white hover:bg-indigo-700 disabled:opacity-50 transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
                                 >
                                     <CreditCard className="w-5 h-5" />
-                                    {loading ? 'Processing...' : 'Continue to Payment Options'}
-                                </button>
-                                <button
-                                    onClick={handleOneClickCheckout}
-                                    disabled={loading || !selectedAddressId || isConfirmingDemoPayment}
-                                    className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl shadow-lg shadow-emerald-600/20 py-3.5 px-4 text-base font-bold hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
-                                >
-                                    <Lock className="w-5 h-5" />
-                                    {isConfirmingDemoPayment ? 'Placing Order...' : '⚡ Quick 1-Click Pay'}
+                                    {loading ? 'Processing...' : 'Continue to Payment'}
                                 </button>
                             </div>
                         )}
@@ -314,119 +306,22 @@ const CheckoutPage = () => {
 
                     {/* Step 2: Payment */}
                     {clientSecret && (
-                        <section className="bg-white p-6 sm:p-8 shadow-sm rounded-2xl border border-slate-200/80" id="payment-section">
+                        <section className="bg-white p-5 sm:p-8 shadow-sm rounded-2xl border border-slate-200/80" id="payment-section">
                             <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                                 <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                                     <CreditCard className="w-6 h-6 text-indigo-600" />
-                                    Payment Method
+                                    Payment Details
                                 </h3>
                                 <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                                     <ShieldCheck className="w-3.5 h-3.5" /> 256-bit Encrypted
                                 </span>
                             </div>
 
-                            {/* Payment Tabs */}
-                            <div className="flex rounded-xl bg-slate-100 p-1 mb-6 border border-slate-200">
-                                <button
-                                    type="button"
-                                    onClick={() => setActivePaymentMethod('instant')}
-                                    className={`flex-1 py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 ${
-                                        activePaymentMethod === 'instant'
-                                            ? 'bg-white text-indigo-700 shadow-sm'
-                                            : 'text-slate-600 hover:text-slate-900'
-                                    }`}
-                                >
-                                    <Lock className="w-4 h-4 text-emerald-600" />
-                                    ⚡ Instant 1-Click Pay (Fast Dev)
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setActivePaymentMethod('stripe')}
-                                    className={`flex-1 py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 ${
-                                        activePaymentMethod === 'stripe'
-                                            ? 'bg-white text-indigo-700 shadow-sm'
-                                            : 'text-slate-600 hover:text-slate-900'
-                                    }`}
-                                >
-                                    <CreditCard className="w-4 h-4 text-indigo-600" />
-                                    💳 Card Payment (Stripe)
-                                </button>
+                            <div className="space-y-6">
+                                <Elements stripe={stripePromise} options={{ clientSecret }}>
+                                    <PaymentStep orderId={orderInfo?.order_id} orderNumber={orderInfo?.order_number} />
+                                </Elements>
                             </div>
-
-                            {activePaymentMethod === 'stripe' ? (
-                                isRealStripe ? (
-                                    <div className="space-y-6">
-                                        <div className="p-3.5 bg-indigo-50/70 rounded-xl border border-indigo-100 text-xs text-indigo-800 flex items-center justify-between">
-                                            <span>💡 Stripe Test Card: <strong className="font-mono">4242 •••• •••• 4242</strong></span>
-                                            <span>Exp: <strong>12/28</strong> | CVV: <strong>123</strong></span>
-                                        </div>
-
-                                        <Elements stripe={stripePromise} options={{ clientSecret }}>
-                                            <PaymentStep orderId={orderInfo?.order_id} orderNumber={orderInfo?.order_number} />
-                                        </Elements>
-
-                                        <div className="pt-2 text-center">
-                                            <button
-                                                type="button"
-                                                onClick={() => setActivePaymentMethod('instant')}
-                                                className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold underline underline-offset-2"
-                                            >
-                                                Prefer instant checkout? Switch to ⚡ 1-Click Pay
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl text-center space-y-3">
-                                        <p className="text-sm text-slate-600">
-                                            Stripe is in mock / offline mode for this session. Use the <strong>Instant 1-Click Pay</strong> option to test order placement without entering card digits.
-                                        </p>
-                                        <button
-                                            type="button"
-                                            onClick={() => setActivePaymentMethod('instant')}
-                                            className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition"
-                                        >
-                                            Switch to Instant 1-Click Pay
-                                        </button>
-                                    </div>
-                                )
-                            ) : (
-                                <div className="space-y-6">
-                                    <div className="p-5 bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-slate-50 rounded-xl border border-indigo-100">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <span className="text-sm font-bold text-indigo-950">Instant Dev / Test Checkout</span>
-                                            <span className="text-xs bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full">
-                                                Zero Friction
-                                            </span>
-                                        </div>
-                                        <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                                            Test environment mode. Click below to securely confirm this order, decrement stock, and view the receipt immediately without typing card digits.
-                                        </p>
-                                        <div className="grid grid-cols-2 gap-3 text-xs text-slate-600 font-mono">
-                                            <div className="bg-white p-2.5 rounded-lg border border-slate-200">
-                                                Mock Card: 4242 •••• 4242
-                                            </div>
-                                            <div className="bg-white p-2.5 rounded-lg border border-slate-200">
-                                                Status: Authorized ✓
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        onClick={handleDirectDemoPayment}
-                                        disabled={isConfirmingDemoPayment}
-                                        className="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-600 text-white py-4 px-6 rounded-xl font-bold text-base hover:opacity-95 disabled:opacity-50 transition-all duration-200 shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99]"
-                                    >
-                                        <Lock className="w-5 h-5" />
-                                        {isConfirmingDemoPayment 
-                                            ? "Processing Payment..." 
-                                            : `Pay ₹${Number(summary?.total_amount || 0).toFixed(2)} & Complete Order`}
-                                    </button>
-
-                                    <p className="text-center text-xs text-slate-400">
-                                        Local testing active. All order records and stock deductions are tracked authoritatively in Postgres.
-                                    </p>
-                                </div>
-                            )}
                         </section>
                     )}
                 </div>

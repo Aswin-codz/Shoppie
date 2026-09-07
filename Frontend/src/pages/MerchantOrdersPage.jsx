@@ -427,26 +427,26 @@ const MerchantOrdersPage = () => {
     }
 
     return (
-        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 py-8">
+        <div className="w-full px-3.5 sm:px-8 lg:px-12 xl:px-16 py-6 sm:py-8">
             {/* Top Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight flex items-center gap-3">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight flex flex-wrap items-center gap-2 sm:gap-3">
                         <span>Merchant Orders</span>
                         <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
                             Product-Centric Hub
                         </span>
                     </h1>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
                         Manage fulfillment, inspect customer deliveries, and control order lifecycles by product.
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 w-full sm:w-auto">
                     <button
                         type="button"
                         onClick={handleExportCsv}
                         disabled={isExporting}
-                        className="inline-flex items-center gap-2 px-4 py-2 border border-transparent rounded-xl shadow-xs text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all disabled:opacity-50"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 w-full sm:w-auto border border-transparent rounded-xl shadow-xs text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all disabled:opacity-50"
                     >
                         {isExporting ? (
                             <RefreshCcw className="w-4 h-4 animate-spin" />
@@ -461,23 +461,23 @@ const MerchantOrdersPage = () => {
 
             {/* Analytics Overview Cards */}
             {analyticsLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6 mb-8 sm:mb-10">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
-                        <div key={i} className="bg-white p-6 rounded-2xl shadow-xs border border-gray-100 animate-pulse min-h-[155px]"></div>
+                        <div key={i} className="bg-white p-4 sm:p-6 rounded-2xl shadow-xs border border-gray-100 animate-pulse min-h-[140px]"></div>
                     ))}
                 </div>
             ) : analytics && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6 mb-8 sm:mb-10">
                     {/* Net Revenue (factoring in returned orders) */}
-                    <div className="bg-white p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-emerald-200 hover:shadow-md transition-all duration-200 min-h-[155px] flex flex-col justify-between">
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-emerald-200 hover:shadow-md transition-all duration-200 min-h-[140px] flex flex-col justify-between">
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Net Revenue</span>
-                            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center flex-shrink-0">
-                                <DollarSign className="w-5 h-5" />
+                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center flex-shrink-0">
+                                <DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />
                             </div>
                         </div>
                         <div>
-                            <p className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+                            <p className="text-xl sm:text-3xl font-black text-gray-900 tracking-tight">
                                 ₹{Number(analytics.net_revenue ?? (analytics.total_revenue - (analytics.returned_revenue || 0)) ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </p>
                             <div className="text-xs text-gray-500 mt-2 flex flex-wrap items-center gap-x-2 gap-y-0.5">
@@ -493,15 +493,15 @@ const MerchantOrdersPage = () => {
                     </div>
 
                     {/* Total Orders */}
-                    <div className="bg-white p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-indigo-200 hover:shadow-md transition-all duration-200 min-h-[155px] flex flex-col justify-between">
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-indigo-200 hover:shadow-md transition-all duration-200 min-h-[140px] flex flex-col justify-between">
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Total Orders</span>
-                            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center flex-shrink-0">
-                                <ShoppingBag className="w-5 h-5" />
+                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center flex-shrink-0">
+                                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
                             </div>
                         </div>
                         <div>
-                            <p className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+                            <p className="text-xl sm:text-3xl font-black text-gray-900 tracking-tight">
                                 {analytics.total_orders || 0}
                             </p>
                             <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
@@ -511,15 +511,15 @@ const MerchantOrdersPage = () => {
                     </div>
 
                     {/* Units Sold */}
-                    <div className="bg-white p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-sky-200 hover:shadow-md transition-all duration-200 min-h-[155px] flex flex-col justify-between">
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-sky-200 hover:shadow-md transition-all duration-200 min-h-[140px] flex flex-col justify-between">
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Units Sold</span>
-                            <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center flex-shrink-0">
-                                <Package className="w-5 h-5" />
+                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center flex-shrink-0">
+                                <Package className="w-4 h-4 sm:w-5 sm:h-5" />
                             </div>
                         </div>
                         <div>
-                            <p className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+                            <p className="text-xl sm:text-3xl font-black text-gray-900 tracking-tight">
                                 {analytics.units_sold || 0}
                             </p>
                             <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
@@ -529,15 +529,15 @@ const MerchantOrdersPage = () => {
                     </div>
 
                     {/* Avg Order Value */}
-                    <div className="bg-white p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-violet-200 hover:shadow-md transition-all duration-200 min-h-[155px] flex flex-col justify-between">
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-violet-200 hover:shadow-md transition-all duration-200 min-h-[140px] flex flex-col justify-between">
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Avg Order Value</span>
-                            <div className="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 border border-violet-100 flex items-center justify-center flex-shrink-0">
-                                <TrendingUp className="w-5 h-5" />
+                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-violet-50 text-violet-600 border border-violet-100 flex items-center justify-center flex-shrink-0">
+                                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
                             </div>
                         </div>
                         <div>
-                            <p className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+                            <p className="text-xl sm:text-3xl font-black text-gray-900 tracking-tight">
                                 ₹{Number(analytics.average_order_value || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </p>
                             <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
@@ -547,15 +547,15 @@ const MerchantOrdersPage = () => {
                     </div>
 
                     {/* Returned Products (replaces Conversion Rate) */}
-                    <div className="bg-white p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-amber-200 hover:shadow-md transition-all duration-200 min-h-[155px] flex flex-col justify-between">
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-amber-200 hover:shadow-md transition-all duration-200 min-h-[140px] flex flex-col justify-between">
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Returned Products</span>
-                            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center flex-shrink-0">
-                                <RotateCcw className="w-5 h-5" />
+                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center flex-shrink-0">
+                                <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
                             </div>
                         </div>
                         <div>
-                            <p className="text-2xl sm:text-3xl font-black text-amber-600 tracking-tight">
+                            <p className="text-xl sm:text-3xl font-black text-amber-600 tracking-tight">
                                 {analytics.returned_units || 0} <span className="text-base font-semibold text-gray-500">Units</span>
                             </p>
                             <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
@@ -566,15 +566,15 @@ const MerchantOrdersPage = () => {
                     </div>
 
                     {/* Add to Cart */}
-                    <div className="bg-white p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-indigo-200 hover:shadow-md transition-all duration-200 min-h-[155px] flex flex-col justify-between">
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xs border border-gray-200/90 hover:border-indigo-200 hover:shadow-md transition-all duration-200 min-h-[140px] flex flex-col justify-between">
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Add to Cart</span>
-                            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center flex-shrink-0">
-                                <ShoppingCart className="w-5 h-5" />
+                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center flex-shrink-0">
+                                <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
                             </div>
                         </div>
                         <div>
-                            <p className="text-2xl sm:text-3xl font-black text-indigo-600 tracking-tight">
+                            <p className="text-xl sm:text-3xl font-black text-indigo-600 tracking-tight">
                                 {Number(analytics.add_to_cart_rate || 0).toFixed(1)}%
                             </p>
                             <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
