@@ -408,11 +408,10 @@ class MerchantProductViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         """
-        Soft delete the product instead of physically deleting it.
+        Delete the product.
         """
         instance = self.get_object()
-        instance.is_active = False
-        instance.save()
+        instance.delete()
         cache.clear()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

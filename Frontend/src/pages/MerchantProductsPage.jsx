@@ -291,125 +291,127 @@ export default function MerchantProductsPage() {
 
             {/* Quick Edit Modal */}
             {editingProduct && (
-                <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-                    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={() => setEditingProduct(null)}></div>
-                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                        <div className="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
-                            <form onSubmit={handleEditSubmit}>
-                                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                    <div className="sm:flex sm:items-start">
-                                        <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                                            <h3 className="text-lg leading-6 font-semibold text-gray-900 mb-5" id="modal-title">
-                                                Quick Edit: <span className="text-indigo-600 truncate">{editingProduct.name}</span>
-                                            </h3>
-                                            <div className="space-y-4">
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div>
-                                                        <label className="block text-sm font-medium text-gray-700">Price (₹)</label>
-                                                        <input
-                                                            type="number"
-                                                            step="0.01"
-                                                            min="0"
-                                                            required
-                                                            value={editForm.price}
-                                                            onChange={(e) => setEditForm({...editForm, price: e.target.value})}
-                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border"
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <label className="block text-sm font-medium text-gray-700">Compare at Price (₹)</label>
-                                                        <input
-                                                            type="number"
-                                                            step="0.01"
-                                                            min="0"
-                                                            value={editForm.compare_at_price}
-                                                            onChange={(e) => setEditForm({...editForm, compare_at_price: e.target.value})}
-                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-medium text-gray-700">Stock Quantity</label>
-                                                    <input
-                                                        type="number"
-                                                        min="0"
-                                                        required
-                                                        value={editForm.stock_quantity}
-                                                        onChange={(e) => setEditForm({...editForm, stock_quantity: e.target.value})}
-                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border"
-                                                    />
-                                                </div>
-                                                <div className="col-span-2">
-                                                    <label className="block text-sm font-medium text-gray-700 mb-2">Rich Description</label>
-                                                    <DescriptionBuilder 
-                                                        description={editForm.description}
-                                                        onChange={(val) => setEditForm({...editForm, description: val})}
-                                                    />
-                                                </div>
-                                            </div>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" onClick={() => !isSaving && setEditingProduct(null)} />
+                    <div className="relative z-10 w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden my-auto transform transition-all">
+                        <form onSubmit={handleEditSubmit}>
+                            <div className="bg-white p-5 sm:p-6">
+                                <h3 className="text-lg font-bold text-gray-900 mb-4" id="modal-title">
+                                    Quick Edit: <span className="text-indigo-600 truncate">{editingProduct.name}</span>
+                                </h3>
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
+                                            <input
+                                                type="number"
+                                                step="0.01"
+                                                min="0"
+                                                required
+                                                value={editForm.price}
+                                                onChange={(e) => setEditForm({...editForm, price: e.target.value})}
+                                                className="w-full rounded-xl border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm px-3.5 py-2.5 outline-none"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Compare at Price (₹)</label>
+                                            <input
+                                                type="number"
+                                                step="0.01"
+                                                min="0"
+                                                value={editForm.compare_at_price}
+                                                onChange={(e) => setEditForm({...editForm, compare_at_price: e.target.value})}
+                                                className="w-full rounded-xl border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm px-3.5 py-2.5 outline-none"
+                                            />
                                         </div>
                                     </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            required
+                                            value={editForm.stock_quantity}
+                                            onChange={(e) => setEditForm({...editForm, stock_quantity: e.target.value})}
+                                            className="w-full rounded-xl border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm px-3.5 py-2.5 outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Rich Description</label>
+                                        <DescriptionBuilder 
+                                            description={editForm.description}
+                                            onChange={(val) => setEditForm({...editForm, description: val})}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-xl border-t border-gray-200">
-                                    <button
-                                        type="submit"
-                                        disabled={isSaving}
-                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
-                                    >
-                                        {isSaving ? 'Saving...' : 'Save Changes'}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setEditingProduct(null)}
-                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            <div className="bg-gray-50 px-5 py-4 sm:px-6 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 border-t border-gray-100">
+                                <button
+                                    type="button"
+                                    onClick={() => setEditingProduct(null)}
+                                    className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={isSaving}
+                                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-500/20 disabled:opacity-50"
+                                >
+                                    {isSaving ? 'Saving...' : 'Save Changes'}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}
 
             {/* Delete Product Confirmation Modal */}
             {deletingProduct && (
-                <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="delete-modal-title" role="dialog" aria-modal="true">
-                    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        <div className="fixed inset-0 bg-gray-500/75 backdrop-blur-sm transition-opacity" onClick={() => !isDeleting && setDeletingProduct(null)}></div>
-                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                        <div className="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full p-6">
-                            <div className="flex items-center gap-4 mb-4">
-                                <div className="p-3 bg-rose-100 text-rose-600 rounded-full flex-shrink-0">
-                                    <Trash2 className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <h3 className="text-lg font-bold text-gray-900" id="delete-modal-title">Delete Product</h3>
-                                    <p className="text-xs text-gray-500">This action cannot be undone.</p>
-                                </div>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto" aria-labelledby="delete-modal-title" role="dialog" aria-modal="true">
+                    {/* Backdrop */}
+                    <div 
+                        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" 
+                        onClick={() => !isDeleting && setDeletingProduct(null)} 
+                    />
+                    {/* Modal Dialog Card */}
+                    <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 overflow-hidden my-auto transform transition-all">
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="p-3 bg-rose-100 text-rose-600 rounded-2xl flex-shrink-0">
+                                <Trash2 className="w-6 h-6" />
                             </div>
-                            <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                                Are you sure you want to permanently delete <strong className="text-gray-900 font-semibold">{deletingProduct.name}</strong>? All associated inventory records and images will be removed.
-                            </p>
-                            <div className="flex justify-end gap-3">
-                                <button
-                                    type="button"
-                                    disabled={isDeleting}
-                                    onClick={() => setDeletingProduct(null)}
-                                    className="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors disabled:opacity-50"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="button"
-                                    disabled={isDeleting}
-                                    onClick={handleDeleteProduct}
-                                    className="px-4 py-2 text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-colors shadow-md shadow-rose-600/20 disabled:opacity-50 flex items-center gap-2"
-                                >
-                                    {isDeleting ? 'Deleting...' : 'Yes, Delete Product'}
-                                </button>
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-900" id="delete-modal-title">Delete Product</h3>
+                                <p className="text-xs text-gray-500">This action cannot be undone.</p>
                             </div>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                            Are you sure you want to permanently delete <strong className="text-gray-900 font-semibold">{deletingProduct.name}</strong>? All associated inventory records and images will be removed.
+                        </p>
+                        <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
+                            <button
+                                type="button"
+                                disabled={isDeleting}
+                                onClick={() => setDeletingProduct(null)}
+                                className="w-full sm:w-auto px-4 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors disabled:opacity-50 text-center"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                disabled={isDeleting}
+                                onClick={handleDeleteProduct}
+                                className="w-full sm:w-auto px-5 py-2.5 text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-colors shadow-md shadow-rose-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
+                            >
+                                {isDeleting ? (
+                                    <>
+                                        <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                                        <span>Deleting...</span>
+                                    </>
+                                ) : (
+                                    <span>Yes, Delete Product</span>
+                                )}
+                            </button>
                         </div>
                     </div>
                 </div>
