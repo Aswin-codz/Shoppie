@@ -10,7 +10,7 @@ env = environ.Env(
 )
 environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
 
-SECRET_KEY = env('DJANGO_SECRET_KEY')
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='django-insecure-shopzy-prod-placeholder-change-in-env-992384729384')
 
 # Ensure CLOUDINARY_URL is available in os.environ for Cloudinary
 _c_url = env('CLOUDINARY_URL', default=None)
@@ -103,7 +103,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
-    'default': env.db('DATABASE_URL')
+    'default': env.db('DATABASE_URL', default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 }
 
 AUTH_PASSWORD_VALIDATORS = [

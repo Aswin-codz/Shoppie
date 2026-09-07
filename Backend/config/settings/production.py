@@ -29,7 +29,7 @@ LOGGING = {
     },
     'formatters': {
         'verbose': {
-            'format': '{"time": "{asctime}", "level": "{levelname}", "module": "{module}", "correlation_id": "{correlation_id}", "message": "{message}"}',
+            'format': '{asctime} [{levelname}] [{module}] [cid:{correlation_id}]: {message}',
             'style': '{',
         },
     },
