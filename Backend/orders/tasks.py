@@ -76,9 +76,9 @@ def detect_abandoned_carts():
             # Send Email
             try:
                 send_mail(
-                    subject="You left something behind in your Shoppie cart!",
-                    message="You have items in your cart waiting for you. Complete your purchase before they sell out!\n\nVisit Shoppie to checkout.",
-                    from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@shoppie.com'),
+                    subject="You left something behind in your Nexura cart!",
+                    message="You have items in your cart waiting for you. Complete your purchase before they sell out!\n\nVisit Nexura to checkout.",
+                    from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@nexura.com'),
                     recipient_list=[cart.user.email],
                     fail_silently=True,
                 )
@@ -136,8 +136,8 @@ def check_wishlist_price_drops():
                 try:
                     send_mail(
                         subject=f"Price Drop Alert: {item.product.name}",
-                        message=f"Good news! The price of {item.product.name} has dropped from ${reference_price} to ${current_price}.\n\nGrab it now at Shoppie!",
-                        from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@shoppie.com'),
+                        message=f"Good news! The price of {item.product.name} has dropped from ${reference_price} to ${current_price}.\n\nGrab it now at Nexura!",
+                        from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@nexura.com'),
                         recipient_list=[item.wishlist.user.email],
                         fail_silently=True,
                     )
@@ -160,9 +160,9 @@ def send_order_confirmation_email(order_id):
     try:
         order = Order.objects.select_related('user').get(id=order_id)
         send_mail(
-            subject=f"Shoppie: Order Confirmation {order.order_number}",
+            subject=f"Nexura: Order Confirmation {order.order_number}",
             message=f"Hi {order.user.first_name},\n\nThank you for your order! Your order number is {order.order_number}.\n\nTotal amount: ${order.total_amount}\n\nWe'll notify you once it ships.",
-            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@shoppie.com'),
+            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@nexura.com'),
             recipient_list=[order.user.email],
             fail_silently=True,
         )

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as cartApi from './cartApi';
 
-const GUEST_CART_KEY = 'shoppie_guest_cart';
+const GUEST_CART_KEY = 'nexura_guest_cart';
 
 // Helper to get guest cart from local storage
 const getGuestCart = () => {

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: shoppie-backend
+    name: nexura-backend
     env: python
     rootDir: Backend
     buildCommand: "./build.sh"

@@ -70,7 +70,7 @@ export default function RegisterPage() {
                         Create account
                     </h1>
                     <p className="text-slate-400 text-center mb-8">
-                        Join Shoppie as a buyer or merchant
+                        Join Nexura as a buyer or merchant
                     </p>
 
                     {errors && (

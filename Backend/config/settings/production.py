@@ -46,9 +46,9 @@ LOGGING = {
             'level': env.str('DJANGO_LOG_LEVEL', default='INFO'),
             'propagate': False,
         },
-        'shoppie': {
+        'nexura': {
             'handlers': ['console'],
-            'level': env.str('SHOPPIE_LOG_LEVEL', default='INFO'),
+            'level': env.str('NEXURA_LOG_LEVEL', default='INFO'),
             'propagate': False,
         },
     },

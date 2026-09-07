@@ -84,7 +84,7 @@ export default function Navbar() {
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="text-2xl font-bold text-indigo-600 flex items-center gap-2">
               <Package className="h-8 w-8" />
-              Shoppie
+              Nexura
             </Link>
           </div>
 

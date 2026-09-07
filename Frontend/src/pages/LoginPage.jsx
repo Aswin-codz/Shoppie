@@ -50,7 +50,7 @@ export default function LoginPage() {
                         Welcome back
                     </h1>
                     <p className="text-slate-400 text-center mb-8">
-                        Sign in to your Shoppie account
+                        Sign in to your Nexura account
                     </p>
 
                     {errorMessage && (

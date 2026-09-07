@@ -13,8 +13,8 @@ class UserAdmin(BaseUserAdmin):
     ordering = ("email",)
 
     fieldsets = BaseUserAdmin.fieldsets + (
-        ("Shoppie", {"fields": ("role", "is_approved")}),
+        ("Nexura", {"fields": ("role", "is_approved")}),
     )
     add_fieldsets = BaseUserAdmin.add_fieldsets + (
-        ("Shoppie", {"fields": ("email", "role")}),
+        ("Nexura", {"fields": ("email", "role")}),
     )

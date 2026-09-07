@@ -10,7 +10,7 @@ from cloudinary.models import CloudinaryField
 
 class User(AbstractUser):
     """
-    Custom User model for Shoppie.
+    Custom User model for Nexura.
     Uses email as the primary authentication identifier.
     Supports USER and MERCHANT roles.
     """

@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Shoppie Main Flow', () => {
+test.describe('Nexura Main Flow', () => {
   test('User can browse products and add to cart', async ({ page }) => {
     // Navigate to homepage
     await page.goto('http://localhost:5173');
     
     // Check if the title is correct
-    await expect(page).toHaveTitle(/Shoppie/);
+    await expect(page).toHaveTitle(/Nexura/);
     
     // Verify header exists
     await expect(page.getByRole('banner')).toBeVisible();

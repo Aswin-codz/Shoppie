@@ -1,5 +1,5 @@
 # ==========================================
-# Root .gitignore for Shoppie Project
+# Root .gitignore for Nexura Project
 # ==========================================
 
 # Environments & secrets
@@ -9,9 +9,12 @@
 .env.development.local
 .env.test.local
 .env.production.local
-!.env.example
 *.pem
 *.key
+
+# Deployment documentation / private deployment notes
+deploy.md
+DEPLOY.md
 
 # Python / Django
 __pycache__/
