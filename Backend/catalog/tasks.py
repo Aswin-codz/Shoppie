@@ -43,8 +43,8 @@ def check_stock_alerts():
             try:
                 send_mail(
                     subject=f"Back In Stock: {alert.product.name}",
-                    message=f"Good news! {alert.product.name} is back in stock. Grab it before it sells out again!\n\nVisit Nexura to buy.",
-                    from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@nexura.com'),
+                    message=f"Good news! {alert.product.name} is back in stock. Grab it before it sells out again!\n\nVisit Shopzy to buy.",
+                    from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@shopzy.com'),
                     recipient_list=[alert.user.email],
                     fail_silently=True,
                 )

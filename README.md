@@ -1,6 +1,6 @@
-﻿# Nexura - Modern E-Commerce Marketplace
+﻿# Shopzy - Modern E-Commerce Marketplace
 
-Nexura is a fully-featured, dual-role e-commerce marketplace platform built for scale, performance, and modern user experience.
+Shopzy is a fully-featured, dual-role e-commerce marketplace platform built for scale, performance, and modern user experience.
 
 It supports two core roles:
 1. **Users (Customers):** Browse products, filter by category and price, manage cart and wishlist, checkout securely with Stripe, and track complete order lifecycles and returns.
@@ -28,7 +28,7 @@ It supports two core roles:
 
 ## Production Architecture & Deployment
 
-Nexura is configured for modern cloud deployment:
+Shopzy is configured for modern cloud deployment:
 - **Backend:** Hosted on **Render** using Gunicorn (`Procfile` & `render.yaml` included).
 - **Frontend:** Hosted on **Vercel** with full client-side routing support (`vercel.json` included).
 - **Database:** Hosted on **Neon Serverless PostgreSQL**.

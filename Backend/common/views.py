@@ -12,7 +12,7 @@ class HealthCheckView(APIView):
         check_type = request.query_params.get('type', 'liveness')
         
         if check_type == 'liveness':
-            return Response({"status": "ok", "service": "nexura-api"})
+            return Response({"status": "ok", "service": "shopzy-api"})
             
         # Readiness check
         db_status = "ok"
@@ -34,7 +34,7 @@ class HealthCheckView(APIView):
         
         return Response({
             "status": "ok" if is_ready else "error",
-            "service": "nexura-api",
+            "service": "shopzy-api",
             "database": db_status,
             "cache": cache_status
         }, status=status.HTTP_200_OK if is_ready else status.HTTP_503_SERVICE_UNAVAILABLE)

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: nexura-backend
+    name: shopzy-backend
     env: python
     rootDir: Backend
     buildCommand: "./build.sh"

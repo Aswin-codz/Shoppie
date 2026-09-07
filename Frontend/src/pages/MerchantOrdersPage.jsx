@@ -458,29 +458,6 @@ const MerchantOrdersPage = () => {
                 </div>
             </div>
 
-            {/* Smart Insights */}
-            {analytics && analytics.insights && analytics.insights.length > 0 && (
-                <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="mb-8 p-5 bg-gradient-to-r from-indigo-50 via-white to-indigo-50/50 border border-indigo-100 rounded-2xl shadow-xs"
-                >
-                    <h3 className="text-base font-bold text-indigo-900 flex items-center gap-2 mb-3">
-                        <Sparkles className="w-5 h-5 text-indigo-600" /> Actionable Store Insights
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {analytics.insights.map((insight, idx) => (
-                            <div key={idx} className="flex gap-2.5 items-start p-3 bg-white/80 rounded-xl border border-indigo-100/70 text-xs text-indigo-950 shadow-xs">
-                                <span className="bg-indigo-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold mt-0.5 flex-shrink-0">
-                                    {idx + 1}
-                                </span>
-                                <span className="leading-relaxed">{insight}</span>
-                            </div>
-                        ))}
-                    </div>
-                </motion.div>
-            )}
 
             {/* Analytics Overview Cards */}
             {analyticsLoading ? (

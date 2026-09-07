@@ -66,11 +66,14 @@ export default function RegisterPage() {
                 className="w-full max-w-md"
             >
                 <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
+                    <div className="flex justify-center mb-3">
+                        <img src="/logo.png" alt="Shopzy" className="h-11 w-auto object-contain" />
+                    </div>
                     <h1 className="text-3xl font-bold text-white text-center mb-2">
                         Create account
                     </h1>
                     <p className="text-slate-400 text-center mb-8">
-                        Join Nexura as a buyer or merchant
+                        Join Shopzy as a buyer or merchant
                     </p>
 
                     {errors && (

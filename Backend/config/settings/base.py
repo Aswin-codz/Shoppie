@@ -180,7 +180,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Django-Q2 Configuration
 Q_CLUSTER = {
-    'name': 'nexura',
+    'name': 'shopzy',
     'workers': 4,
     'recycle': 500,
     'timeout': 60,
