@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+/* Suppress Stripe test assistant floating widget / bubble */
+iframe[name*="__privateStripeAssistant"],
+iframe[title*="assistant" i],
+iframe[title*="Stripe Assistant" i],
+iframe[aria-label*="assistant" i],
+div[class*="StripeAssistant"],
+div[class*="stripe-assistant"],
+div[id*="stripe-assistant"] {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+}

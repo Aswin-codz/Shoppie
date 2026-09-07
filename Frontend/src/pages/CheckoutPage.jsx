@@ -22,7 +22,13 @@ const getStripePromise = (key) => {
         return cachedStripePromise;
     }
     cachedKey = trimmed;
-    cachedStripePromise = loadStripe(trimmed);
+    cachedStripePromise = loadStripe(trimmed, {
+        developerTools: {
+            assistant: {
+                enabled: false,
+            },
+        },
+    });
     return cachedStripePromise;
 };
 
@@ -37,7 +43,6 @@ const CheckoutPage = () => {
     const [orderInfo, setOrderInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [isConfirmingDemoPayment, setIsConfirmingDemoPayment] = useState(false);
     
     // Stripe publishable key & promise state (cached singleton)
     const [stripePromise, setStripePromise] = useState(() => 
@@ -170,63 +175,26 @@ const CheckoutPage = () => {
         }
     };
 
-    const [activePaymentMethod, setActivePaymentMethod] = useState('instant'); // 'instant' | 'stripe'
-
-    const handleOneClickCheckout = async () => {
-        if (!selectedAddressId) {
-            setError("Please select a delivery address.");
-            return;
-        }
-        
-        const selectedAddress = addresses.find(a => a.id === selectedAddressId);
-        if (!selectedAddress) {
-            setError("Invalid address selected.");
-            return;
-        }
-
-        setError('');
-        setIsConfirmingDemoPayment(true);
-        
-        try {
-            const res = await ordersApi.createPaymentIntent({
-                address_snapshot: selectedAddress,
-                existing_order_id: orderInfo?.order_id,
-                coupon_code: appliedCoupon
+    useEffect(() => {
+        // Proactively suppress Stripe test assistant floating widget / bubble from the DOM
+        const hideStripeAssistant = () => {
+            const elements = document.querySelectorAll(
+                'iframe[name*="__privateStripeAssistant"], iframe[title*="assistant" i], iframe[title*="Assistant" i], iframe[aria-label*="assistant" i], div[class*="StripeAssistant"], div[class*="stripe-assistant"], div[id*="stripe-assistant"]'
+            );
+            elements.forEach(el => {
+                el.style.setProperty('display', 'none', 'important');
+                el.style.setProperty('visibility', 'hidden', 'important');
+                el.style.setProperty('pointer-events', 'none', 'important');
+                el.style.setProperty('opacity', '0', 'important');
             });
-            
-            await ordersApi.confirmPayment({
-                order_id: res.data.order_id,
-                payment_intent_id: res.data.client_secret || 'quick_checkout',
-            });
-            
-            dispatch(clearCart());
-            toast.success("Order placed and confirmed successfully!");
-            navigate(`/checkout/success?order=${res.data.order_number}`);
-        } catch (err) {
-            setError(err.response?.data?.detail || "Failed to complete checkout.");
-            setIsConfirmingDemoPayment(false);
-        }
-    };
+        };
 
-    const handleDirectDemoPayment = async (e) => {
-        if (e) e.preventDefault();
-        setIsConfirmingDemoPayment(true);
-        setError('');
-        try {
-            await ordersApi.confirmPayment({
-                order_id: orderInfo.order_id,
-                payment_intent_id: clientSecret || 'demo_paid',
-            });
-            dispatch(clearCart());
-            toast.success("Payment completed successfully!");
-            navigate(`/checkout/success?order=${orderInfo.order_number}`);
-        } catch (err) {
-            setError(err.response?.data?.detail || "Failed to complete payment. Please try again.");
-            setIsConfirmingDemoPayment(false);
-        }
-    };
+        hideStripeAssistant();
+        const observer = new MutationObserver(hideStripeAssistant);
+        observer.observe(document.body, { childList: true, subtree: true });
 
-    const isRealStripe = Boolean(stripePromise && clientSecret && !clientSecret.startsWith('pi_demo_'));
+        return () => observer.disconnect();
+    }, []);
 
     if ((loading || cartStatus === 'loading' || cartStatus === 'idle') && !summary) {
         return (
@@ -318,7 +286,20 @@ const CheckoutPage = () => {
                             </div>
 
                             <div className="space-y-6">
-                                <Elements stripe={stripePromise} options={{ clientSecret }}>
+                                <Elements 
+                                    stripe={stripePromise} 
+                                    options={{ 
+                                        clientSecret,
+                                        developerTools: {
+                                            assistant: {
+                                                enabled: false,
+                                            },
+                                        },
+                                        assistant: {
+                                            enabled: false,
+                                        },
+                                    }}
+                                >
                                     <PaymentStep orderId={orderInfo?.order_id} orderNumber={orderInfo?.order_number} />
                                 </Elements>
                             </div>
