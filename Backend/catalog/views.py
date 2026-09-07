@@ -508,11 +508,13 @@ class MerchantProductImageViewSet(viewsets.ModelViewSet):
         if product.images.count() >= 8:
             return Response({"detail": "Maximum of 8 images allowed per product."}, status=status.HTTP_400_BAD_REQUEST)
             
-        if 'image' not in request.FILES:
+        image_file = request.FILES.get('image') or request.FILES.get('file')
+        if not image_file:
             return Response({"detail": "No image file provided."}, status=status.HTTP_400_BAD_REQUEST)
             
         data = request.data.copy()
-        if 'alt_text' not in data:
+        data['image'] = image_file
+        if 'alt_text' not in data or not data.get('alt_text'):
             data['alt_text'] = f'{product.name} product image'
             
         serializer = self.get_serializer(data=data)

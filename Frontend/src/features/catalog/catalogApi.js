@@ -93,7 +93,6 @@ export const deleteMerchantProduct = async (id) => {
 // Image endpoints
 export const uploadProductImage = async (productId, formData, onUploadProgress) => {
   const response = await axiosClient.post(`${CATALOG_URL}/merchant/products/${productId}/images/`, formData, {
-    headers: { 'Content-Type': undefined },
     onUploadProgress
   });
   return response.data;

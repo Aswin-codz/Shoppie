@@ -19,6 +19,10 @@ axiosClient.interceptors.request.use(
             config.headers = config.headers || {};
             config.headers.Authorization = `Bearer ${token}`;
         }
+        if (config.data instanceof FormData && config.headers) {
+            delete config.headers['Content-Type'];
+            delete config.headers['content-type'];
+        }
         return config;
     },
     (error) => Promise.reject(error)

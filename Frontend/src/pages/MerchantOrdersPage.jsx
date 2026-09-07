@@ -173,7 +173,12 @@ const MerchantOrdersPage = () => {
     const [productAnalytics, setProductAnalytics] = useState([]);
     const [returns, setReturns] = useState([]);
     const [loadingReturns, setLoadingReturns] = useState(false);
+    const [isReturnsOpen, setIsReturnsOpen] = useState(true);
     const [isExporting, setIsExporting] = useState(false);
+
+    const pendingReturnsCount = useMemo(() => {
+        return returns.filter((r) => r.status === 'REQUESTED').length;
+    }, [returns]);
 
     // Product search and filter state
     const [searchQuery, setSearchQuery] = useState('');
@@ -596,18 +601,20 @@ const MerchantOrdersPage = () => {
                         <table className="min-w-full divide-y divide-gray-200 text-sm">
                             <thead className="bg-gray-50/70">
                                 <tr>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Product</th>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Stock</th>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Funnel (Views → Cart → Buy)</th>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Conversion</th>
-                                    <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Abandonment</th>
+                                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Product</th>
+                                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Stock</th>
+                                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Funnel (Views → Cart → Buy)</th>
+                                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Conversion</th>
+                                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Abandonment</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-100">
                                 {productAnalytics.map((pa) => (
                                     <tr key={pa.id} className="hover:bg-gray-50/50 transition-colors">
-                                        <td className="px-5 py-3.5 whitespace-nowrap font-medium text-gray-900">{pa.name}</td>
-                                        <td className="px-5 py-3.5 whitespace-nowrap text-gray-500">
+                                        <td className="px-3 sm:px-4 py-3 font-medium text-gray-900 max-w-[200px] sm:max-w-[280px] break-words whitespace-normal leading-snug">
+                                            <span title={pa.name}>{pa.name}</span>
+                                        </td>
+                                        <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-gray-500">
                                             {pa.status === 'OUT_OF_STOCK' ? (
                                                 <span className="inline-flex items-center text-red-600 font-semibold gap-1 text-xs px-2 py-0.5 rounded-full bg-red-50">
                                                     <AlertTriangle className="h-3.5 w-3.5" /> Out of stock ({pa.stock})
@@ -621,8 +628,8 @@ const MerchantOrdersPage = () => {
                                                 <span className="text-gray-700 font-medium">{pa.stock} in stock</span>
                                             )}
                                         </td>
-                                        <td className="px-5 py-3.5 whitespace-nowrap text-gray-500">
-                                            <div className="flex items-center gap-2 text-xs">
+                                        <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-gray-500">
+                                            <div className="flex items-center gap-1.5 sm:gap-2 text-xs">
                                                 <span className="flex items-center gap-1 text-gray-600"><Eye className="h-3.5 w-3.5 text-gray-400" /> {pa.funnel?.views || 0}</span>
                                                 <span className="text-gray-300">→</span>
                                                 <span className="flex items-center gap-1 text-gray-600"><ShoppingCart className="h-3.5 w-3.5 text-indigo-400" /> {pa.funnel?.adds || 0}</span>
@@ -630,12 +637,12 @@ const MerchantOrdersPage = () => {
                                                 <span className="flex items-center gap-1 text-gray-600"><ShoppingBag className="h-3.5 w-3.5 text-emerald-500" /> {pa.funnel?.purchases || 0}</span>
                                             </div>
                                         </td>
-                                        <td className="px-5 py-3.5 whitespace-nowrap text-xs">
+                                        <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-xs">
                                             <span className={(pa.rates?.conversion_rate || 0) > 5 ? 'text-emerald-600 font-semibold' : 'text-gray-700'}>
                                                 {(pa.rates?.conversion_rate || 0).toFixed(1)}%
                                             </span>
                                         </td>
-                                        <td className="px-5 py-3.5 whitespace-nowrap text-xs">
+                                        <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-xs">
                                             {(() => {
                                                 const adds = pa.funnel?.adds || 0;
                                                 const purchases = pa.funnel?.purchases || 0;
@@ -655,74 +662,127 @@ const MerchantOrdersPage = () => {
                 </div>
             )}
 
-            {/* Return Requests Section */}
+            {/* Return Requests Collapsible Section */}
             {returns.length > 0 && (
-                <div className="mb-10">
-                    <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center justify-between">
-                        <span className="flex items-center gap-2">
-                            <RefreshCcw className="h-5 w-5 text-indigo-600" />
-                            Return Requests ({returns.length})
-                        </span>
-                    </h2>
-                    <div className="space-y-3">
-                        {returns.map((req) => (
-                            <div
-                                key={req.id}
-                                className="bg-white border border-amber-200/80 rounded-2xl p-4.5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
-                            >
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-semibold text-gray-900 text-sm">{req.product_name}</span>
-                                        <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 font-mono">
-                                            {req.order_number}
-                                        </span>
-                                    </div>
-                                    <div className="text-xs text-gray-500 mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                                        <span>Quantity: <strong className="text-gray-700">{req.quantity}</strong></span>
-                                        <span>Reason: <strong className="text-amber-700">{req.reason}</strong></span>
-                                    </div>
-                                    {req.customer_notes && (
-                                        <p className="text-xs text-gray-600 mt-2 bg-gray-50 p-2 rounded-lg italic">
-                                            "{req.customer_notes}"
-                                        </p>
-                                    )}
-                                </div>
-                                <div className="flex items-center gap-3 flex-shrink-0">
-                                    <span
-                                        className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                                            req.status === 'APPROVED' || req.status === 'COMPLETED'
-                                                ? 'bg-green-100 text-green-800'
-                                                : req.status === 'REJECTED'
-                                                ? 'bg-red-100 text-red-800'
-                                                : 'bg-amber-100 text-amber-800'
-                                        }`}
-                                    >
-                                        {req.status}
-                                    </span>
-                                    {req.status === 'REQUESTED' && (
-                                        <div className="flex gap-2">
-                                            <button
-                                                type="button"
-                                                onClick={() => handleReturnAction(req.id, 'approve')}
-                                                className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-xs font-medium transition-colors"
-                                                title="Approve Return"
-                                            >
-                                                <Check className="w-3.5 h-3.5" /> Approve
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleReturnAction(req.id, 'reject')}
-                                                className="inline-flex items-center gap-1 px-3 py-1.5 bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 rounded-lg text-xs font-medium transition-colors"
-                                                title="Reject Return"
-                                            >
-                                                <X className="w-3.5 h-3.5" /> Reject
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
+                <div className="mb-10 bg-white border border-gray-200 rounded-2xl shadow-xs overflow-hidden transition-all duration-200">
+                    {/* Accordion Toggle Header */}
+                    <button
+                        type="button"
+                        onClick={() => setIsReturnsOpen((prev) => !prev)}
+                        className="w-full px-5 py-4 flex items-center justify-between bg-white hover:bg-gray-50/80 transition-colors text-left"
+                    >
+                        <div className="flex items-center gap-3 flex-wrap">
+                            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 shrink-0">
+                                <RefreshCcw className="h-5 w-5" />
                             </div>
-                        ))}
-                    </div>
+                            <div className="flex items-center gap-2">
+                                <h2 className="text-base sm:text-lg font-bold text-gray-900">
+                                    Return Requests
+                                </h2>
+                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
+                                    {returns.length}
+                                </span>
+                            </div>
+
+                            {/* Status Badge: Red pulsing when action needed, neutral when cleared */}
+                            {pendingReturnsCount > 0 ? (
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500 text-white shadow-xs animate-pulse">
+                                    <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                                    {pendingReturnsCount} Action Required
+                                </span>
+                            ) : (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                    All Cleared
+                                </span>
+                            )}
+                        </div>
+
+                        <div className="flex items-center gap-2 text-gray-400">
+                            <span className="text-xs hidden sm:inline text-gray-500">
+                                {isReturnsOpen ? 'Collapse' : 'Expand'}
+                            </span>
+                            <ChevronDown
+                                className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                                    isReturnsOpen ? 'rotate-180 text-indigo-600' : ''
+                                }`}
+                            />
+                        </div>
+                    </button>
+
+                    {/* Collapsible Content */}
+                    {isReturnsOpen && (
+                        <div className="p-4 sm:p-5 border-t border-gray-100 bg-gray-50/40 space-y-3">
+                            {returns.map((req) => (
+                                <div
+                                    key={req.id}
+                                    className="bg-white border border-gray-200/90 rounded-xl p-4 shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition hover:border-gray-300"
+                                >
+                                    <div className="flex-1 min-w-0">
+                                        {/* Neatly aligned Request ID, Order ID & Product Name */}
+                                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                                            <span className="text-xs font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-100 font-mono shrink-0">
+                                                Return #{req.id}
+                                            </span>
+                                            <span className="text-xs font-medium px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-mono shrink-0 flex items-center gap-1">
+                                                <span className="text-gray-400">Order:</span>
+                                                <span>{req.order_number || `#${req.order}`}</span>
+                                            </span>
+                                            <span className="text-gray-300 hidden sm:inline">•</span>
+                                            <span className="font-semibold text-gray-900 text-sm break-words">
+                                                {req.product_name}
+                                            </span>
+                                        </div>
+
+                                        <div className="text-xs text-gray-500 mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                                            <span>Quantity: <strong className="text-gray-800">{req.quantity}</strong></span>
+                                            <span>Reason: <strong className="text-amber-700 font-medium">{req.reason}</strong></span>
+                                        </div>
+
+                                        {req.customer_notes && (
+                                            <p className="text-xs text-gray-600 mt-2 bg-gray-50 p-2.5 rounded-lg italic border border-gray-100">
+                                                "{req.customer_notes}"
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div className="flex items-center gap-3 shrink-0 self-start sm:self-center">
+                                        <span
+                                            className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                                                req.status === 'APPROVED' || req.status === 'COMPLETED'
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : req.status === 'REJECTED'
+                                                    ? 'bg-red-100 text-red-800'
+                                                    : 'bg-amber-100 text-amber-800'
+                                            }`}
+                                        >
+                                            {req.status}
+                                        </span>
+                                        {req.status === 'REQUESTED' && (
+                                            <div className="flex gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleReturnAction(req.id, 'approve')}
+                                                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-xs font-medium transition-colors"
+                                                    title="Approve Return"
+                                                >
+                                                    <Check className="w-3.5 h-3.5" /> Approve
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleReturnAction(req.id, 'reject')}
+                                                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 rounded-lg text-xs font-medium transition-colors"
+                                                    title="Reject Return"
+                                                >
+                                                    <X className="w-3.5 h-3.5" /> Reject
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
 

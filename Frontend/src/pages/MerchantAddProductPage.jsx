@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
-import { Package, Upload, Plus, X, Loader2 } from 'lucide-react';
+import { Package, Upload, Plus, X, Loader2, Sparkles, Coins, Layers, ImagePlus, FileText } from 'lucide-react';
 import { uploadProductImage, fetchCategories } from '../features/catalog/catalogSlice';
 import DescriptionBuilder from '../components/catalog/DescriptionBuilder';
 import axiosClient from '../api/axiosClient';
@@ -155,12 +155,9 @@ export default function MerchantAddProductPage() {
                     if (i === 0) formData.append('is_primary', 'true');
                     
                     try {
-                        await axiosClient.post(`/catalog/merchant/products/${productId}/images/`, formData, {
-                            headers: {
-                                'Content-Type': undefined
-                            }
-                        });
+                        await axiosClient.post(`/catalog/merchant/products/${productId}/images/`, formData);
                     } catch (imgError) {
+                        console.error('Image upload error:', imgError);
                         toast.error(`Failed to upload image ${i + 1}`);
                     }
                 }
@@ -193,6 +190,17 @@ export default function MerchantAddProductPage() {
                 <div className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-2xl md:col-span-2 p-4 sm:p-6 md:p-8">
                     <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:gap-y-8 sm:grid-cols-6">
                         
+                        {/* Section 1: General Information */}
+                        <div className="col-span-full flex items-center gap-3 pb-3 border-b border-gray-100">
+                            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 shrink-0">
+                                <FileText className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-bold text-gray-900">General Information</h3>
+                                <p className="text-xs text-gray-500">Provide the title and core identity of your product</p>
+                            </div>
+                        </div>
+
                         <div className="col-span-full">
                             <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
                                 Product Name <span className="text-red-500">*</span>
@@ -210,14 +218,33 @@ export default function MerchantAddProductPage() {
                             </div>
                         </div>
 
+                        {/* Section 2: Specifications & Description */}
+                        <div className="col-span-full flex items-center gap-3 pt-4 pb-3 border-b border-gray-100">
+                            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 shrink-0">
+                                <Sparkles className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-bold text-gray-900">Rich Specifications & Headings</h3>
+                                <p className="text-xs text-gray-500">Add detailed feature sections with searchable heading icons</p>
+                            </div>
+                        </div>
+
                         <div className="col-span-full">
-                            <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
-                                Rich Description
-                            </label>
                             <DescriptionBuilder 
                                 description={form.description}
                                 onChange={(val) => setForm(prev => ({ ...prev, description: val }))}
                             />
+                        </div>
+
+                        {/* Section 3: Pricing & Inventory */}
+                        <div className="col-span-full flex items-center gap-3 pt-4 pb-3 border-b border-gray-100">
+                            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 shrink-0">
+                                <Coins className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-bold text-gray-900">Pricing & Inventory</h3>
+                                <p className="text-xs text-gray-500">Set base price, compare price, and available warehouse stock</p>
+                            </div>
                         </div>
 
                         <div className="sm:col-span-2 sm:col-start-1">
@@ -274,8 +301,36 @@ export default function MerchantAddProductPage() {
                                 />
                             </div>
                         </div>
+
+                        <div className="sm:col-span-2">
+                            <label htmlFor="sku" className="block text-sm font-medium leading-6 text-gray-900">
+                                SKU / Item Code (Optional)
+                            </label>
+                            <div className="mt-2">
+                                <input
+                                    type="text"
+                                    name="sku"
+                                    id="sku"
+                                    value={form.sku}
+                                    onChange={handleChange}
+                                    placeholder="e.g. ELEC-PROD-001"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
+                                />
+                            </div>
+                        </div>
                         
-                        <div className="col-span-full border-t border-gray-200 pt-6 mt-2">
+                        {/* Section 4: Categorization & Tags */}
+                        <div className="col-span-full flex items-center gap-3 pt-4 pb-3 border-b border-gray-100">
+                            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 shrink-0">
+                                <Layers className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-bold text-gray-900">Categorization & Discovery</h3>
+                                <p className="text-xs text-gray-500">Organize your item into categories and search tags</p>
+                            </div>
+                        </div>
+
+                        <div className="col-span-full">
                             <label htmlFor="category" className="block text-sm font-medium leading-6 text-gray-900">
                                 Category <span className="text-red-500">*</span>
                             </label>
@@ -333,10 +388,18 @@ export default function MerchantAddProductPage() {
                             </div>
                         </div>
                         
-                        <div className="col-span-full border-t border-gray-200 pt-6 mt-2">
-                            <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
-                                Product Images
-                            </label>
+                        {/* Section 5: Media & Gallery */}
+                        <div className="col-span-full flex items-center gap-3 pt-4 pb-3 border-b border-gray-100">
+                            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 shrink-0">
+                                <ImagePlus className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-bold text-gray-900">Media & Visual Gallery</h3>
+                                <p className="text-xs text-gray-500">Upload product photos (PNG, JPG, WebP - max 8 images)</p>
+                            </div>
+                        </div>
+
+                        <div className="col-span-full">
 
                             {/* Existing Images (Edit Mode) */}
                             {isEditMode && existingImages.length > 0 && (
