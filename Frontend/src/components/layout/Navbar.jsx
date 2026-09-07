@@ -82,15 +82,12 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="flex items-center gap-2.5 group">
+            <Link to="/" className="flex items-center group py-1" aria-label="Shopzy Home">
               <img
                 src="/logo.png"
                 alt="Shopzy"
-                className="h-9 w-auto max-w-[42px] object-contain transition-transform duration-200 group-hover:scale-105"
+                className="h-10 sm:h-11 w-auto max-h-12 object-contain transition-transform duration-200 group-hover:scale-105"
               />
-              <span className="text-2xl font-black tracking-tight text-indigo-600 group-hover:text-indigo-700 transition-colors">
-                Shopzy
-              </span>
             </Link>
           </div>
 
