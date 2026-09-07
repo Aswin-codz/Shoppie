@@ -427,7 +427,7 @@ const MerchantOrdersPage = () => {
     }
 
     return (
-        <div className="w-full px-3.5 sm:px-8 lg:px-12 xl:px-16 py-6 sm:py-8">
+        <div className="w-full max-w-full min-w-0">
             {/* Top Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
                 <div>
@@ -739,9 +739,9 @@ const MerchantOrdersPage = () => {
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2.5">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto">
                         {/* Search Input */}
-                        <div className="relative min-w-[240px] flex-1 sm:flex-none">
+                        <div className="relative w-full sm:w-auto sm:min-w-[240px]">
                             <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                             <input
                                 type="text"
@@ -761,18 +761,18 @@ const MerchantOrdersPage = () => {
                         </div>
 
                         {/* Bulk Expand / Collapse */}
-                        <div className="inline-flex rounded-xl border border-gray-200 p-0.5 bg-gray-50 text-xs">
+                        <div className="inline-flex rounded-xl border border-gray-200 p-0.5 bg-gray-50 text-xs justify-center">
                             <button
                                 type="button"
                                 onClick={expandAll}
-                                className="px-2.5 py-1.5 rounded-lg hover:bg-white text-gray-700 font-medium transition-colors"
+                                className="flex-1 sm:flex-none px-2.5 py-1.5 rounded-lg hover:bg-white text-gray-700 font-medium transition-colors text-center"
                             >
                                 Expand All
                             </button>
                             <button
                                 type="button"
                                 onClick={collapseAll}
-                                className="px-2.5 py-1.5 rounded-lg hover:bg-white text-gray-700 font-medium transition-colors"
+                                className="flex-1 sm:flex-none px-2.5 py-1.5 rounded-lg hover:bg-white text-gray-700 font-medium transition-colors text-center"
                             >
                                 Collapse All
                             </button>
@@ -851,11 +851,11 @@ const MerchantOrdersPage = () => {
                                 {/* Product Summary Card Header */}
                                 <div
                                     onClick={() => toggleProductExpand(product.key)}
-                                    className="p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 cursor-pointer bg-white hover:bg-gray-50/60 transition-colors select-none"
+                                    className="p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 sm:gap-4 cursor-pointer bg-white hover:bg-gray-50/60 transition-colors select-none min-w-0"
                                 >
                                     {/* Product Details (Left) */}
-                                    <div className="flex items-center gap-4 flex-1 min-w-0">
-                                        <div className="w-16 h-16 rounded-xl bg-gray-100 border border-gray-200 flex-shrink-0 overflow-hidden flex items-center justify-center shadow-xs">
+                                    <div className="flex items-start sm:items-center gap-3 sm:gap-4 flex-1 min-w-0 w-full md:w-auto">
+                                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-gray-100 border border-gray-200 shrink-0 overflow-hidden flex items-center justify-center shadow-xs">
                                             {product.productImage ? (
                                                 <img
                                                     src={product.productImage}
@@ -863,23 +863,23 @@ const MerchantOrdersPage = () => {
                                                     className="w-full h-full object-cover"
                                                 />
                                             ) : (
-                                                <Package className="w-7 h-7 text-gray-400" />
+                                                <Package className="w-6 h-6 sm:w-7 sm:h-7 text-gray-400" />
                                             )}
                                         </div>
 
                                         <div className="min-w-0 flex-1">
-                                            <div className="flex items-center gap-2 flex-wrap">
-                                                <h3 className="text-base font-bold text-gray-900 truncate">
+                                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                                <h3 className="text-sm sm:text-base font-bold text-gray-900 break-words line-clamp-2 leading-snug">
                                                     {product.productName}
                                                 </h3>
                                                 {product.productSku && (
-                                                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 border border-gray-200">
+                                                    <span className="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 border border-gray-200 self-start">
                                                         SKU: {product.productSku}
                                                     </span>
                                                 )}
                                             </div>
 
-                                            <div className="flex items-center gap-3 mt-1.5 text-xs text-gray-500 flex-wrap">
+                                            <div className="flex items-center gap-2 sm:gap-3 mt-1 text-xs text-gray-500 flex-wrap">
                                                 <span className="font-semibold text-gray-900">
                                                     ₹{Number(product.unitPrice || 0).toLocaleString('en-IN')} <span className="font-normal text-gray-400">/ unit</span>
                                                 </span>
@@ -897,10 +897,10 @@ const MerchantOrdersPage = () => {
                                     </div>
 
                                     {/* Aggregated Metrics & Expand Button (Right) */}
-                                    <div className="flex items-center gap-4 sm:gap-6 w-full md:w-auto justify-between md:justify-end pt-2 md:pt-0 border-t md:border-t-0 border-gray-100">
+                                    <div className="flex items-center gap-3 sm:gap-6 w-full md:w-auto justify-between md:justify-end pt-2 sm:pt-3 md:pt-0 border-t md:border-t-0 border-gray-100">
                                         <div className="text-left md:text-right">
-                                            <p className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold">Total Revenue</p>
-                                            <p className="text-base font-extrabold text-emerald-600">
+                                            <p className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-400 font-semibold">Total Revenue</p>
+                                            <p className="text-sm sm:text-base font-extrabold text-emerald-600">
                                                 ₹{product.totalRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                             </p>
                                         </div>
@@ -966,19 +966,19 @@ const MerchantOrdersPage = () => {
                                             animate={{ opacity: 1, height: 'auto' }}
                                             exit={{ opacity: 0, height: 0 }}
                                             transition={{ duration: 0.2 }}
-                                            className="border-t border-gray-100 bg-slate-50/60 p-4 sm:p-6 overflow-visible"
+                                            className="border-t border-gray-100 bg-slate-50/60 p-3 sm:p-5 overflow-visible min-w-0"
                                         >
-                                            <div className="flex items-center justify-between mb-4">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3">
                                                 <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-2">
-                                                    <User className="w-4 h-4 text-indigo-600" />
-                                                    Customer Orders for this Product ({product.orders.length})
+                                                    <User className="w-4 h-4 text-indigo-600 shrink-0" />
+                                                    Customer Orders ({product.orders.length})
                                                 </h4>
                                                 <span className="text-[11px] text-gray-400">
-                                                    Showing customer delivery details & fulfillment controls
+                                                    Delivery details & fulfillment controls
                                                 </span>
                                             </div>
 
-                                            <div className="space-y-4">
+                                            <div className="space-y-3">
                                                 {product.orders.map(({ order, item }) => {
                                                     // Find if there is an active return request for this order/item
                                                     const orderReturns = returns.filter(
@@ -996,29 +996,27 @@ const MerchantOrdersPage = () => {
                                                     return (
                                                         <div
                                                             key={`${order.id}-${item.id}`}
-                                                            className="bg-white rounded-xl border border-gray-200/90 shadow-xs p-5 transition-shadow hover:shadow-sm relative overflow-visible"
+                                                            className="bg-white rounded-xl border border-gray-200/90 shadow-xs p-3.5 sm:p-5 transition-shadow hover:shadow-sm relative overflow-visible min-w-0"
                                                         >
                                                             {/* Order Row Header */}
-                                                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-gray-100 relative overflow-visible">
-                                                                <div className="flex items-center gap-3 flex-wrap">
-                                                                    <span className="font-mono font-bold text-sm text-gray-900 bg-gray-100 px-2.5 py-1 rounded-lg border border-gray-200">
+                                                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5 pb-3 border-b border-gray-100 relative overflow-visible">
+                                                                <div className="flex items-center gap-2 flex-wrap min-w-0">
+                                                                    <span className="font-mono font-bold text-xs sm:text-sm text-gray-900 bg-gray-100 px-2 py-0.5 rounded-md border border-gray-200 break-all">
                                                                         {order.order_number}
                                                                     </span>
-                                                                    <span className="text-xs text-gray-500 flex items-center gap-1">
-                                                                        <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                                                                    <span className="text-[11px] text-gray-500 flex items-center gap-1">
+                                                                        <Calendar className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                                                                         {order.created_at
                                                                             ? new Date(order.created_at).toLocaleDateString('en-IN', {
                                                                                   day: 'numeric',
                                                                                   month: 'short',
                                                                                   year: 'numeric',
-                                                                                  hour: '2-digit',
-                                                                                  minute: '2-digit',
                                                                               })
                                                                             : 'Recent'}
                                                                     </span>
                                                                     {/* Payment Status Badge */}
                                                                     <span
-                                                                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                                                                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${
                                                                             order.payment_status === 'PAID'
                                                                                 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                                                                                 : order.payment_status === 'PENDING'
@@ -1026,16 +1024,14 @@ const MerchantOrdersPage = () => {
                                                                                 : 'bg-gray-100 text-gray-700 border border-gray-200'
                                                                         }`}
                                                                     >
-                                                                        <CreditCard className="w-3 h-3" />
+                                                                        <CreditCard className="w-3 h-3 shrink-0" />
                                                                         <span>{order.payment_status || 'PAID'}</span>
                                                                     </span>
                                                                 </div>
 
                                                                 {/* Status Action / Dropdown */}
-                                                                <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-                                                                    <div className="text-right hidden sm:block">
-                                                                        <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Order Status</p>
-                                                                    </div>
+                                                                <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pt-1 sm:pt-0">
+                                                                    <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider sm:hidden">Order Status:</span>
                                                                     <ModernStatusDropdown
                                                                         currentStatus={order.status}
                                                                         isLocked={isLocked}
@@ -1047,69 +1043,69 @@ const MerchantOrdersPage = () => {
                                                             </div>
 
                                                             {/* Customer Details & Delivery Info Grid */}
-                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-4 text-xs">
+                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mt-3 text-xs">
                                                                 {/* Customer Contact Card */}
-                                                                <div className="bg-slate-50/70 p-3.5 rounded-xl border border-slate-200/60">
-                                                                    <p className="font-bold text-gray-800 uppercase tracking-wider text-[10px] mb-2 flex items-center gap-1.5 text-indigo-700">
-                                                                        <User className="w-3.5 h-3.5" /> Customer Contact
+                                                                <div className="bg-slate-50/70 p-3 rounded-xl border border-slate-200/60 min-w-0">
+                                                                    <p className="font-bold text-gray-800 uppercase tracking-wider text-[10px] mb-1.5 flex items-center gap-1.5 text-indigo-700">
+                                                                        <User className="w-3.5 h-3.5 shrink-0" /> Customer Contact
                                                                     </p>
-                                                                    <p className="font-semibold text-gray-900 text-sm">
+                                                                    <p className="font-semibold text-gray-900 text-xs sm:text-sm break-words">
                                                                         {order.customer_name || 'Customer'}
                                                                     </p>
                                                                     {order.customer_email && (
-                                                                        <p className="text-gray-600 mt-1 flex items-center gap-1.5 truncate">
-                                                                            <Mail className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                                                                        <p className="text-gray-600 mt-1 flex items-center gap-1.5 min-w-0">
+                                                                            <Mail className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                                                                             <a
                                                                                 href={`mailto:${order.customer_email}`}
-                                                                                className="hover:underline text-indigo-600 truncate"
+                                                                                className="hover:underline text-indigo-600 truncate text-[11px]"
                                                                             >
                                                                                 {order.customer_email}
                                                                             </a>
                                                                         </p>
                                                                     )}
                                                                     {order.customer_phone ? (
-                                                                        <p className="text-gray-600 mt-1 flex items-center gap-1.5 font-mono text-[11px]">
-                                                                            <Phone className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                                                                        <p className="text-gray-600 mt-1 flex items-center gap-1.5 font-mono text-[11px] min-w-0">
+                                                                            <Phone className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                                                                             <a
                                                                                 href={`tel:${order.customer_phone}`}
-                                                                                className="hover:underline"
+                                                                                className="hover:underline truncate"
                                                                             >
                                                                                 {order.customer_phone}
                                                                             </a>
                                                                         </p>
                                                                     ) : (
-                                                                        <p className="text-gray-400 mt-1 italic">Phone not provided</p>
+                                                                        <p className="text-gray-400 mt-1 italic text-[11px]">Phone not provided</p>
                                                                     )}
                                                                 </div>
 
                                                                 {/* Delivery Address Card */}
-                                                                <div className="bg-slate-50/70 p-3.5 rounded-xl border border-slate-200/60">
-                                                                    <p className="font-bold text-gray-800 uppercase tracking-wider text-[10px] mb-2 flex items-center gap-1.5 text-indigo-700">
-                                                                        <MapPin className="w-3.5 h-3.5" /> Delivery Address
+                                                                <div className="bg-slate-50/70 p-3 rounded-xl border border-slate-200/60 min-w-0 break-words">
+                                                                    <p className="font-bold text-gray-800 uppercase tracking-wider text-[10px] mb-1.5 flex items-center gap-1.5 text-indigo-700">
+                                                                        <MapPin className="w-3.5 h-3.5 shrink-0" /> Delivery Address
                                                                     </p>
                                                                     {renderAddressSnapshot(order.shipping_address_snapshot)}
                                                                 </div>
 
                                                                 {/* Order Item Line Summary */}
-                                                                <div className="bg-slate-50/70 p-3.5 rounded-xl border border-slate-200/60 flex flex-col justify-between">
+                                                                <div className="bg-slate-50/70 p-3 rounded-xl border border-slate-200/60 min-w-0 flex flex-col justify-between">
                                                                     <div>
-                                                                        <p className="font-bold text-gray-800 uppercase tracking-wider text-[10px] mb-2 flex items-center gap-1.5 text-indigo-700">
-                                                                            <Package className="w-3.5 h-3.5" /> Ordered Units
+                                                                        <p className="font-bold text-gray-800 uppercase tracking-wider text-[10px] mb-1.5 flex items-center gap-1.5 text-indigo-700">
+                                                                            <Package className="w-3.5 h-3.5 shrink-0" /> Ordered Units
                                                                         </p>
                                                                         <div className="space-y-1">
-                                                                            <p className="text-gray-900 font-semibold">
+                                                                            <p className="text-gray-900 font-semibold text-xs sm:text-sm">
                                                                                 {item.quantity} {item.quantity === 1 ? 'unit' : 'units'} × ₹{Number(item.unit_price).toFixed(2)}
                                                                             </p>
-                                                                            <p className="text-gray-500">
+                                                                            <p className="text-gray-500 text-[11px]">
                                                                                 Line Subtotal: <strong className="text-gray-900 font-bold">₹{Number(item.line_total).toFixed(2)}</strong>
                                                                             </p>
-                                                                            <p className="text-gray-400 text-[11px]">
+                                                                            <p className="text-gray-400 text-[10px]">
                                                                                 Entire Order Total: ₹{Number(order.total_amount).toFixed(2)}
                                                                             </p>
                                                                         </div>
                                                                     </div>
                                                                     {item.product_sku && (
-                                                                        <div className="pt-2 border-t border-slate-200/70 mt-2 text-[11px] text-gray-500 font-mono">
+                                                                        <div className="pt-1.5 border-t border-slate-200/70 mt-2 text-[10px] text-gray-500 font-mono truncate">
                                                                             SKU: {item.product_sku}
                                                                         </div>
                                                                     )}

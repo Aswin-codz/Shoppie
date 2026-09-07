@@ -49,6 +49,32 @@ class CategoryViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        try:
+            from django.core.cache import cache
+            cache.clear()
+        except Exception:
+            pass
+        return instance
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        try:
+            from django.core.cache import cache
+            cache.clear()
+        except Exception:
+            pass
+        return instance
+
+    def perform_destroy(self, instance):
+        instance.delete()
+        try:
+            from django.core.cache import cache
+            cache.clear()
+        except Exception:
+            pass
+
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Public API for viewing tags.
@@ -90,15 +116,20 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         # Base queryset only includes active products
         qs = Product.objects.filter(is_active=True, category__is_active=True)
         
-        # Postgres Trigram Search
+        # Search handling (robust multi-field substring + Trigram fallback on Postgres)
         search_query = self.request.query_params.get('search', '').strip()
         if search_query:
             if connection.vendor == 'postgresql':
+                from django.db.models.functions import Coalesce
+                from django.db.models import Value, FloatField
                 qs = qs.annotate(
-                    similarity=TrigramSimilarity('name', search_query) + 
-                               TrigramSimilarity('description', search_query) * 0.5
+                    similarity=Coalesce(TrigramSimilarity('name', search_query), Value(0.0), output_field=FloatField()) + 
+                               Coalesce(TrigramSimilarity('description', search_query) * 0.5, Value(0.0), output_field=FloatField())
                 ).filter(
-                    Q(similarity__gt=0.1) | Q(tags__name__icontains=search_query)
+                    Q(name__icontains=search_query) |
+                    Q(description__icontains=search_query) |
+                    Q(tags__name__icontains=search_query) |
+                    Q(similarity__gt=0.1)
                 ).order_by('-similarity').distinct()
             else:
                 qs = qs.filter(
@@ -209,7 +240,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             qs = qs.filter(name__icontains=query).order_by('name')
             
-        suggestions = qs.values_list('name', flat=True)[:5]
+        suggestions = list(qs.values('id', 'name', 'slug')[:5])
         
         # Track search anonymously
         if len(query) > 2:
@@ -219,7 +250,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
                 user=request.user if request.user.is_authenticated else None
             )
             
-        return Response([{"query": s, "score": 1} for s in suggestions])
+        return Response([{"id": s["id"], "query": s["name"], "slug": s["slug"], "score": 1} for s in suggestions])
 
     @action(detail=False, methods=['get'])
     def search_history(self, request):

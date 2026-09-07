@@ -97,19 +97,26 @@ export default function MerchantAddProductPage() {
     };
     
     const handleCreateCategory = async () => {
-        if (!newCategoryName.trim()) return;
+        const trimmed = newCategoryName.trim();
+        if (!trimmed) return;
         setIsCreatingCategory(true);
         try {
+            const baseSlug = trimmed.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
             const res = await axiosClient.post('/catalog/categories/', {
-                name: newCategoryName.trim(),
+                name: trimmed,
+                slug: baseSlug || undefined,
                 is_active: true
             });
-            dispatch(fetchCategories()); // Refresh categories
-            setForm({ ...form, category: res.data.id });
+            await dispatch(fetchCategories()); // Refresh categories
+            setForm((prev) => ({ ...prev, category: res.data.id }));
             setNewCategoryName('');
-            toast.success('Category created successfully!');
+            toast.success(`Category "${res.data.name || trimmed}" created!`);
         } catch (error) {
-            toast.error('Failed to create category');
+            const errorMsg = error.response?.data?.name?.[0] || 
+                             error.response?.data?.slug?.[0] || 
+                             error.response?.data?.detail || 
+                             'Failed to create category';
+            toast.error(errorMsg);
         } finally {
             setIsCreatingCategory(false);
         }

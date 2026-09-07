@@ -42,33 +42,56 @@ export default function Navbar() {
     }
   }, [debouncedSearchTerm, isAuthenticated]);
 
-  // Sync search URL param when debounced term changes
+  // Sync search URL param ONLY when user is on the homepage ('/')
   useEffect(() => {
-    const currentSearch = searchParams.get('search') || '';
-    if (debouncedSearchTerm !== currentSearch) {
-      const newParams = new URLSearchParams(searchParams);
-      if (debouncedSearchTerm) {
-        newParams.set('search', debouncedSearchTerm);
-        newParams.delete('page');
-      } else {
-        newParams.delete('search');
-      }
-      setSearchParams(newParams);
-      if (window.location.pathname !== '/') {
-        navigate(`/?${newParams.toString()}`);
+    if (window.location.pathname === '/') {
+      const currentSearch = searchParams.get('search') || '';
+      if (debouncedSearchTerm !== currentSearch) {
+        const newParams = new URLSearchParams(searchParams);
+        if (debouncedSearchTerm) {
+          newParams.set('search', debouncedSearchTerm);
+          newParams.delete('page');
+        } else {
+          newParams.delete('search');
+        }
+        setSearchParams(newParams, { replace: true });
       }
     }
-  }, [debouncedSearchTerm, searchParams, setSearchParams, navigate]);
+  }, [debouncedSearchTerm]);
 
-  const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion.query);
+  const handleSearchSubmit = (e) => {
+    if (e) e.preventDefault();
     setIsFocused(false);
+    setIsMobileSearchOpen(false);
+    const trimmed = searchTerm.trim();
+    if (trimmed) {
+      navigate(`/?search=${encodeURIComponent(trimmed)}`);
+    } else if (window.location.pathname === '/') {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete('search');
+      newParams.delete('page');
+      setSearchParams(newParams);
+    }
   };
 
-  // Sync local state if URL changes from outside (e.g., clicking a tag)
+  const handleSuggestionClick = (suggestion) => {
+    setIsFocused(false);
+    setIsMobileSearchOpen(false);
+    if (suggestion.slug) {
+      // Direct navigation to the suggested product
+      setSearchTerm('');
+      navigate(`/products/${suggestion.slug}`);
+    } else {
+      const query = suggestion.query || suggestion;
+      setSearchTerm(query);
+      navigate(`/?search=${encodeURIComponent(query)}`);
+    }
+  };
+
+  // Sync local state if URL changes from outside on homepage
   useEffect(() => {
-    const q = searchParams.get('search') || '';
-    if (q !== searchTerm) {
+    if (window.location.pathname === '/') {
+      const q = searchParams.get('search') || '';
       setSearchTerm(q);
     }
   }, [searchParams]);
@@ -111,7 +134,7 @@ export default function Navbar() {
 
             {/* Desktop Search Bar (Hidden on mobile) */}
             <div className="hidden md:block flex-1 max-w-2xl mx-2 sm:mx-6 md:mx-8">
-              <div className="relative">
+              <form onSubmit={handleSearchSubmit} className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Search className="h-5 w-5 text-slate-400" />
                 </div>
@@ -162,7 +185,7 @@ export default function Navbar() {
                     </ul>
                   </div>
                 )}
-              </div>
+              </form>
             </div>
 
             {/* Right Navigation */}
@@ -301,7 +324,7 @@ export default function Navbar() {
         {/* Mobile Search Bar Expansion (Popped below navbar and above page filters) */}
         {isMobileSearchOpen && (
           <div className="md:hidden border-t border-slate-200 bg-slate-50/95 backdrop-blur-sm px-4 py-3 animate-in fade-in slide-in-from-top-2 duration-200">
-            <div className="relative">
+            <form onSubmit={handleSearchSubmit} className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-indigo-500" />
               </div>
@@ -324,7 +347,7 @@ export default function Navbar() {
                   <X className="h-4 w-4" />
                 </button>
               )}
-            </div>
+            </form>
 
             {/* Mobile Autocomplete Suggestions Dropdown */}
             {isFocused && (suggestions.length > 0 || (!debouncedSearchTerm && history.length > 0)) && (

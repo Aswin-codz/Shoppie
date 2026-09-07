@@ -13,6 +13,10 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'slug', 'description', 'parent', 'children', 'is_active']
+        read_only_fields = ['id', 'slug']
+        extra_kwargs = {
+            'slug': {'required': False, 'allow_blank': True}
+        }
         
     def get_children(self, obj):
         # Prevent infinite recursion if the hierarchy gets too deep, but for now simple children list
