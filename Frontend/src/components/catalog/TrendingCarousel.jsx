@@ -170,15 +170,15 @@ export default function TrendingCarousel({ products = [] }) {
 
   return (
     <div 
-      className={`relative w-full rounded-3xl overflow-hidden shadow-2xl border transition-all duration-700 bg-gradient-to-r ${palette.bgGradient} ${palette.borderClass} my-6`}
+      className={`relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border transition-all duration-700 bg-gradient-to-r ${palette.bgGradient} ${palette.borderClass} my-3 sm:my-6`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Dynamic ambient dual-tone light glows */}
-      <div className={`absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl ${palette.ambientGlow1} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
-      <div className={`absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr ${palette.ambientGlow2} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
+      <div className={`absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-gradient-to-bl ${palette.ambientGlow1} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
+      <div className={`absolute bottom-0 left-0 w-64 sm:w-80 h-64 sm:h-80 bg-gradient-to-tr ${palette.ambientGlow2} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
 
-      <div className="relative z-20 min-h-[380px] sm:min-h-[420px] lg:min-h-[460px] flex items-center">
+      <div className="relative z-20 flex items-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={current.id || currentIndex}
@@ -186,80 +186,80 @@ export default function TrendingCarousel({ products = [] }) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.80, ease: 'easeOut' }}
-            className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-6 sm:p-10 lg:p-12"
+            className="w-full grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-6 items-center p-3.5 sm:p-8 lg:p-12 pb-8 sm:pb-12"
           >
+            {/* Product Image (Shown first or scaled on mobile) */}
+            <div className="lg:col-span-5 order-1 lg:order-2 flex justify-center items-center">
+              <Link to={`/products/${current.slug}`} className="relative group w-full max-w-[170px] sm:max-w-[240px] lg:max-w-sm">
+                <div className={`absolute -inset-1 bg-gradient-to-r ${palette.haloGradient} rounded-2xl sm:rounded-3xl blur-lg sm:blur-xl opacity-40 group-hover:opacity-75 transition-all duration-700`} />
+                <div className={`relative aspect-square w-full rounded-2xl sm:rounded-3xl overflow-hidden ${palette.imageBox} border flex items-center justify-center p-3 sm:p-6 backdrop-blur-md shadow-xl`}>
+                  <img
+                    src={primaryImage}
+                    alt={current.name}
+                    className="max-w-[100%] max-h-[100%] w-auto h-auto object-contain transform group-hover:scale-105 transition-transform duration-500 rounded-xl"
+                    loading="lazy"
+                  />
+                </div>
+              </Link>
+            </div>
+
             {/* Text Information */}
-            <div className="lg:col-span-7 flex flex-col justify-center space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className={`px-3 py-1 ${palette.badge} border text-xs font-bold rounded-full uppercase tracking-wider transition-colors duration-500`}>
+            <div className="lg:col-span-7 order-2 lg:order-1 flex flex-col justify-center space-y-2 sm:space-y-4 text-center lg:text-left">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-1.5 sm:gap-2">
+                <span className={`px-2.5 py-0.5 sm:px-3 sm:py-1 ${palette.badge} border text-[10px] sm:text-xs font-bold rounded-full uppercase tracking-wider transition-colors duration-500`}>
                   🔥 Trending #{currentIndex + 1} of {items.length}
                 </span>
                 {current.category && (
-                  <span className={`px-3 py-1 ${palette.categoryBadge} border text-xs font-medium rounded-full transition-colors duration-500`}>
+                  <span className={`px-2.5 py-0.5 sm:px-3 sm:py-1 ${palette.categoryBadge} border text-[10px] sm:text-xs font-medium rounded-full transition-colors duration-500`}>
                     {typeof current.category === 'object' ? current.category.name : current.category}
                   </span>
                 )}
                 {current.rating > 0 && (
-                  <span className="inline-flex items-center gap-1 text-amber-300 text-xs font-semibold bg-amber-400/10 px-2.5 py-1 rounded-full border border-amber-400/20">
-                    <Star className="w-3.5 h-3.5 fill-amber-300" />
+                  <span className="inline-flex items-center gap-1 text-amber-300 text-[10px] sm:text-xs font-semibold bg-amber-400/10 px-2 py-0.5 sm:py-1 rounded-full border border-amber-400/20">
+                    <Star className="w-3 h-3 fill-amber-300" />
                     {Number(current.rating).toFixed(1)}
                   </span>
                 )}
               </div>
 
-              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight line-clamp-2">
+              <h2 className="text-lg sm:text-3xl lg:text-5xl font-black text-white leading-tight tracking-tight line-clamp-1 sm:line-clamp-2">
                 {current.name}
               </h2>
 
-              <p className="text-sm sm:text-base text-slate-300 line-clamp-2 max-w-xl font-light">
+              <p className="hidden sm:block text-xs sm:text-base text-slate-300 line-clamp-2 max-w-xl font-light">
                 {typeof current.description === 'string' && current.description.startsWith('[')
                   ? 'Premium high quality product crafted for excellence.'
                   : current.description || 'Discover incredible quality and unmatched performance.'}
               </p>
 
-              <div className="flex items-baseline gap-3 pt-2">
-                <span className="text-3xl sm:text-4xl font-black text-white">
+              <div className="flex items-baseline justify-center lg:justify-start gap-2 sm:gap-3 pt-0.5 sm:pt-2">
+                <span className="text-xl sm:text-3xl lg:text-4xl font-black text-white">
                   ₹{Number(current.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                 </span>
                 {current.compare_at_price && Number(current.compare_at_price) > Number(current.price) && (
-                  <span className="text-lg text-slate-400 line-through font-medium">
+                  <span className="text-sm sm:text-lg text-slate-400 line-through font-medium">
                     ₹{Number(current.compare_at_price).toFixed(2)}
                   </span>
                 )}
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-4">
+              <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3 pt-2 sm:pt-4">
                 <button
                   onClick={handleBuyNow}
-                  className={`px-6 py-3 ${palette.button} font-bold rounded-xl shadow-lg transition-all flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98]`}
+                  className={`px-4 sm:px-6 py-2 sm:py-3 ${palette.button} text-xs sm:text-sm font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 hover:scale-[1.02] active:scale-[0.98]`}
                 >
-                  <ShoppingBag className="w-5 h-5" />
+                  <ShoppingBag className="w-4 h-4" />
                   Buy Now
                 </button>
                 <Link
                   to={`/products/${current.slug}`}
-                  className="px-6 py-3 bg-slate-800/80 hover:bg-slate-700/80 text-white font-semibold rounded-xl border border-slate-700/70 transition-all flex items-center gap-2 backdrop-blur-sm"
+                  className="px-4 sm:px-6 py-2 sm:py-3 bg-slate-800/80 hover:bg-slate-700/80 text-white text-xs sm:text-sm font-semibold rounded-xl border border-slate-700/70 transition-all flex items-center justify-center gap-1.5 backdrop-blur-sm"
                 >
                   View Details
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
-            </div>
-
-            {/* Product Image */}
-            <div className="lg:col-span-5 flex justify-center items-center">
-              <Link to={`/products/${current.slug}`} className="relative group max-w-sm w-full">
-                <div className={`absolute -inset-1.5 bg-gradient-to-r ${palette.haloGradient} rounded-3xl blur-xl opacity-40 group-hover:opacity-75 transition-all duration-700`} />
-                <div className={`relative aspect-square w-full rounded-3xl overflow-hidden ${palette.imageBox} border flex items-center justify-center p-6 sm:p-8 backdrop-blur-md shadow-2xl`}>
-                  <img
-                    src={primaryImage}
-                    alt={current.name}
-                    className="max-w-[110%] max-h-[110%] w-auto h-auto object-contain transform group-hover:scale-105 transition-transform duration-500 rounded-2xl"
-                    loading="lazy"
-                  />
-                </div>
-              </Link>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -271,28 +271,28 @@ export default function TrendingCarousel({ products = [] }) {
           <button
             onClick={handlePrev}
             aria-label="Previous trending product"
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-slate-900/80 text-white hover:bg-white hover:text-slate-900 transition-colors border border-slate-700 shadow-md backdrop-blur-sm"
+            className="absolute left-1.5 sm:left-3 top-1/2 -translate-y-1/2 z-30 p-1.5 sm:p-2.5 rounded-full bg-slate-900/80 text-white hover:bg-white hover:text-slate-900 transition-colors border border-slate-700 shadow-md backdrop-blur-sm"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <button
             onClick={handleNext}
             aria-label="Next trending product"
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-slate-900/80 text-white hover:bg-white hover:text-slate-900 transition-colors border border-slate-700 shadow-md backdrop-blur-sm"
+            className="absolute right-1.5 sm:right-3 top-1/2 -translate-y-1/2 z-30 p-1.5 sm:p-2.5 rounded-full bg-slate-900/80 text-white hover:bg-white hover:text-slate-900 transition-colors border border-slate-700 shadow-md backdrop-blur-sm"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
           {/* Dots Indicator */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
+          <div className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 sm:gap-2">
             {items.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`h-2 rounded-full transition-all duration-300 ${
+                className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                   idx === currentIndex 
-                    ? `w-8 ${palette.dotActive}` 
-                    : 'w-2 bg-slate-600/70 hover:bg-slate-400'
+                    ? `w-6 sm:w-8 ${palette.dotActive}` 
+                    : 'w-1.5 sm:w-2 bg-slate-600/70 hover:bg-slate-400'
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />

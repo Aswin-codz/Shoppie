@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Bell, Check, Settings, X, Package, Tag, ArrowRight, Activity, ShoppingCart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchNotifications, fetchUnreadCount, markNotificationRead, markAllNotificationsRead } from '../../features/notifications/notificationSlice';
@@ -27,6 +27,7 @@ const getLinkForType = (notification) => {
 
 const NotificationCenter = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { items: rawItems, unreadCount, loading } = useSelector((state) => state.notifications);
     const notifications = Array.isArray(rawItems) ? rawItems : (rawItems?.results || []);
     const { isAuthenticated, accessToken } = useSelector((state) => state.auth);
@@ -72,18 +73,28 @@ const NotificationCenter = () => {
         dispatch(markNotificationRead(id));
     };
 
+    const handleBellClick = (e) => {
+        e.preventDefault();
+        // On mobile (<768px), navigate directly to the notifications page
+        if (window.innerWidth < 768) {
+            navigate('/notifications');
+            return;
+        }
+        setIsOpen(!isOpen);
+    };
+
     if (!isAuthenticated) return null;
 
     return (
         <div className="relative" ref={dropdownRef}>
             <button 
-                onClick={() => setIsOpen(!isOpen)}
-                className="relative p-2 text-gray-600 hover:text-indigo-600 transition-colors"
+                onClick={handleBellClick}
+                className="relative p-2 text-slate-500 hover:text-indigo-600 transition-colors"
                 aria-label="Notifications"
             >
-                <Bell className="w-6 h-6" />
+                <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
                 {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full">
+                    <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 text-[10px] sm:text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full">
                         {unreadCount > 99 ? '99+' : unreadCount}
                     </span>
                 )}
@@ -96,7 +107,7 @@ const NotificationCenter = () => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute right-0 z-50 w-80 md:w-96 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+                        className="absolute right-0 z-50 w-[calc(100vw-2rem)] sm:w-96 max-w-sm mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
                     >
                         <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100">
                             <h3 className="font-semibold text-gray-800">Notifications</h3>

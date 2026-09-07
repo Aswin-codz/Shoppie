@@ -4,7 +4,7 @@ import { PackageOpen } from 'lucide-react';
 export default function ProductGrid({ products, isLoading }) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 min-[520px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {[...Array(8)].map((_, i) => (
           <div key={i} className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-[360px] animate-pulse">
             <div className="w-full h-48 bg-slate-200"></div>
@@ -38,7 +38,7 @@ export default function ProductGrid({ products, isLoading }) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 min-[520px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

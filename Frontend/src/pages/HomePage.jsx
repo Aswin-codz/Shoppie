@@ -124,18 +124,98 @@ export default function HomePage() {
     }
   };
 
+  const { categories } = useSelector((state) => state.catalog);
+
+  const currentCategory = searchParams.get('category');
+  const currentMinPrice = searchParams.get('min_price');
+  const currentMaxPrice = searchParams.get('max_price');
+  const currentOrdering = searchParams.get('ordering');
+  const currentSearch = searchParams.get('search');
+
+  const activeFilterCount = [currentCategory, currentMinPrice, currentMaxPrice, currentOrdering].filter(Boolean).length;
+
+  const removeFilter = (key) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete(key);
+    newParams.delete('page');
+    setSearchParams(newParams);
+  };
+
+  const clearAllFilters = () => {
+    const newParams = new URLSearchParams();
+    if (currentSearch) newParams.set('search', currentSearch);
+    setSearchParams(newParams);
+  };
+
+  const getOrderingLabel = (ord) => {
+    switch (ord) {
+      case '-created_at': return 'Newest Arrivals';
+      case 'price': return 'Price: Low to High';
+      case '-price': return 'Price: High to Low';
+      case '-rating': return 'Top Rated';
+      default: return 'Custom Sort';
+    }
+  };
+
+  const categoryName = categories?.find(c => c.slug === currentCategory)?.name || currentCategory;
+
   return (
     <div className="w-full pb-16">
-      {/* Mobile Filters Toggle Button */}
-      <div className="lg:hidden flex justify-between items-center mb-4 p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
-        <span className="text-sm font-semibold text-slate-700">Filter & Sort</span>
-        <button
-          onClick={() => setIsMobileFiltersOpen(true)}
-          className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
-        >
-          <SlidersHorizontal className="w-4 h-4" />
-          Refine Search
-        </button>
+      {/* Mobile Filters Toggle Button & Active Pills */}
+      <div className="lg:hidden mb-4">
+        <div className="flex justify-between items-center p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold text-slate-800">Filter & Sort</span>
+            {activeFilterCount > 0 && (
+              <span className="bg-indigo-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-full">
+                {activeFilterCount}
+              </span>
+            )}
+          </div>
+          <button
+            onClick={() => setIsMobileFiltersOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors active:scale-95"
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            {activeFilterCount > 0 ? 'Edit Filters' : 'Refine'}
+          </button>
+        </div>
+
+        {/* Active Filters Quick Pills */}
+        {activeFilterCount > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5 mt-2 px-1">
+            {currentCategory && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full border border-indigo-200">
+                Category: {categoryName}
+                <button onClick={() => removeFilter('category')} className="hover:text-indigo-900 ml-0.5">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {(currentMinPrice || currentMaxPrice) && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full border border-indigo-200">
+                ₹{currentMinPrice || '0'} - ₹{currentMaxPrice || '∞'}
+                <button onClick={() => { removeFilter('min_price'); removeFilter('max_price'); }} className="hover:text-indigo-900 ml-0.5">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {currentOrdering && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full border border-indigo-200">
+                {getOrderingLabel(currentOrdering)}
+                <button onClick={() => removeFilter('ordering')} className="hover:text-indigo-900 ml-0.5">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            <button
+              onClick={clearAllFilters}
+              className="text-xs text-rose-600 font-semibold hover:underline py-1 px-1 ml-1"
+            >
+              Reset all
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -151,17 +231,35 @@ export default function HomePage() {
               className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
               onClick={() => setIsMobileFiltersOpen(false)} 
             />
-            <div className="relative ml-auto w-full max-w-xs h-full bg-white shadow-2xl p-6 overflow-y-auto flex flex-col">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
-                <h3 className="font-bold text-lg text-slate-900">Filters</h3>
-                <button 
+            <div className="relative ml-auto w-full max-w-xs sm:max-w-sm h-full bg-white shadow-2xl p-5 overflow-y-auto flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-lg text-slate-900">Filters & Sort</h3>
+                    {activeFilterCount > 0 && (
+                      <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                        {activeFilterCount} active
+                      </span>
+                    )}
+                  </div>
+                  <button 
+                    onClick={() => setIsMobileFiltersOpen(false)}
+                    className="p-1.5 text-slate-500 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <SidebarFilters />
+              </div>
+              <div className="sticky bottom-0 bg-white pt-4 pb-2 border-t border-slate-100 mt-6">
+                <button
+                  type="button"
                   onClick={() => setIsMobileFiltersOpen(false)}
-                  className="p-1 text-slate-500 hover:text-slate-900 rounded-lg"
+                  className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition-colors text-sm flex items-center justify-center gap-2"
                 >
-                  <X className="w-5 h-5" />
+                  Apply & View Results
                 </button>
               </div>
-              <SidebarFilters />
             </div>
           </div>
         )}
